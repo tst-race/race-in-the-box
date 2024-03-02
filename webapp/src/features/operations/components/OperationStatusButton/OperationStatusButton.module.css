@@ -1,0 +1,143 @@
+/*
+Copyright 2023 Two Six Technologies
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+*/
+
+/* Have to use !important for color properties because the blueprint button
+ * applies its intent class as well.
+ */
+
+.operationStatusButton {
+  background-color: #fff !important;
+  box-shadow: inset 0 0 0 1px rgba(17, 20, 24, 0.2), 0 1px 2px rgba(17, 20, 24, 0.1);
+  border-radius: 5px;
+}
+
+.operationStatusButton :global(.bp4-icon) {
+  color: inherit !important;
+}
+
+/* The following colors all come from the Blueprint JS color palette:
+ * https://blueprintjs.com/docs/#core/colors
+ */
+
+/* pending
+ *   normal: sepia3 text & border
+ *   hover: sepia2 text & border, sepia5 background
+ */
+
+.pending {
+  box-shadow: inset 0 0 0 1px rgba(148, 102, 56, 0.7), 0 1px 2px rgba(148, 102, 56, 0.1) !important;
+  color: #946638 !important;
+}
+
+.pending:hover {
+  background-color: #d0b090 !important;
+  box-shadow: inset 0 0 0 1px rgba(122, 84, 46, 0.7), 0 1px 2px rgba(122, 84, 46, 0.1) !important;
+  color: #7a542e !important;
+}
+
+/* cancelled
+ *   normal: dark-gray1 text & border
+ *   hover: light-gray5 background
+ */
+
+.cancelled {
+  box-shadow: inset 0 0 0 1px rgba(28, 33, 39, 0.7), 0 1px 2px rgba(28, 33, 39, 0.1) !important;
+  color: #1c2127 !important;
+}
+
+.cancelled:hover {
+  background-color: #f6f7f9 !important;
+}
+
+/* running
+ *   normal: blue3 text & border
+ *   hover: blue2 text & border, blue5 background
+ */
+
+.running {
+  box-shadow: inset 0 0 0 1px rgba(45, 114, 210, 0.7), 0 1px 2px rgba(45, 114, 210, 0.1) !important;
+  color: #2d72d2 !important;
+}
+
+.running:hover {
+  background-color: #8abbff !important;
+  box-shadow: inset 0 0 0 1px rgba(33, 93, 176, 0.7), 0 1px 2px rgba(33, 93, 176, 0.1) !important;
+  color: #215db0 !important;
+}
+
+/* succeeded
+ *   normal: green3 text & border
+ *   hover: green2 text & border, green5 background
+ */
+
+.succeeded {
+  box-shadow: inset 0 0 0 1px rgba(35, 133, 81, 0.7), 0 1px 2px rgba(35, 133, 81, 0.1) !important;
+  color: #238551 !important;
+}
+
+.succeeded:hover {
+  background-color: #72c19b !important;
+  box-shadow: inset 0 0 0 1px rgba(28, 110, 66, 0.7), 0 1px 2px rgba(28, 110, 66, 0.1) !important;
+  color: #1c6e42 !important;
+}
+
+/* failed
+ *   normal: red3 text & border
+ *   hover: red1 text, red2 border, red5 background
+ */
+
+.failed {
+  box-shadow: inset 0 0 0 1px rgba(205, 66, 70, 0.7), 0 1px 2px rgba(205, 66, 70, 0.1) !important;
+  color: #cd4246 !important;
+}
+
+.failed:hover {
+  background-color: #fa999c !important;
+  box-shadow: inset 0 0 0 1px rgba(172, 47, 51, 0.7), 0 1px 2px rgba(172, 47, 51, 0.1) !important;
+  color: #8e292c !important;
+}
+
+/* aborted
+ *   normal: orange3 text & border
+ *   hover: orange1 text, orange2 border, orange5 background
+ */
+
+.aborted {
+  box-shadow: inset 0 0 0 1px rgba(200, 118, 25, 0.7), 0 1px 2px rgba(200, 118, 25, 0.1) !important;
+  color: #c87619 !important;
+}
+
+.aborted:hover {
+  background-color: #fbbe60 !important;
+  box-shadow: inset 0 0 0 1px rgba(147, 86, 16, 0.7), 0 1px 2px rgba(147, 86, 16, 0.1) !important;
+  color: #77450d !important;
+}
+
+/* invalid
+ *   normal: violet3 text & border
+ *   hover: violet2 text & border, violet5 background
+ */
+
+.invalid {
+  box-shadow: inset 0 0 0 1px rgba(157, 63, 157, 0.7), 0 1px 2px rgba(157, 63, 157, 0.1) !important;
+  color: #9d3f9d !important;
+}
+
+.invalid:hover {
+  background-color: #d69fd6 !important;
+  box-shadow: inset 0 0 0 1px rgba(124, 50, 124, 0.7), 0 1px 2px rgba(124, 50, 124, 0.1) !important;
+  color: #7c327c !important;
+}

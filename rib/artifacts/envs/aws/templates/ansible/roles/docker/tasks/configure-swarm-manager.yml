@@ -1,0 +1,50 @@
+---
+
+- name: Initialize Docker Swarm
+  docker_swarm:
+    state: present
+  register: swarm
+
+- name: Set Manager Label
+  docker_node:
+    hostname: "{{ ansible_fqdn }}"
+    labels:
+      cluster_role: cluster-manager
+
+- name: Create Overlay Network
+  docker_network:
+    attachable: yes
+    driver: overlay
+    name: rib-overlay-network
+    state: present
+    driver_options:
+      com.docker.network.driver.mtu: 1200
+    ipam_options:
+      subnet: "10.11.0.0/16"
+      gateway: "10.11.0.2"
+
+# Have to customize the swarm ingress network to avoid collisions with the host subnet
+# so DNS lookups work correctly inside the all containers. The VPC is configured with
+# a base CIDR of 10.0.0.0/16, so the default ingress network subnet of 10.0.0.0/24
+# has a collision.
+#
+# Also, we have to use the shell module since the docker_network module does not have
+# support for swarm ingress networks
+
+- name: Remove Default Ingress Network
+  shell:
+    cmd: "yes | docker network rm ingress"
+  ignore_errors: true
+
+- name: Create Ingress Network
+  shell:
+    cmd: docker network create --driver overlay --ingress --subnet=10.12.0.0/16 --gateway=10.12.0.2 --opt com.docker.network.driver.mtu=1200 rib-ingress-network
+  register: create_network_result
+  ignore_errors: true
+  changed_when: "create_network_result.rc == 0"
+
+- name: Verify Ingress Network Exists
+  docker_network_info:
+    name: rib-ingress-network
+  register: ingress_network_result
+  failed_when: "not ingress_network_result.exists"

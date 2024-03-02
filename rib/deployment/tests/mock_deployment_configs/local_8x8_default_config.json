@@ -1,0 +1,158 @@
+{
+  "race_version": "0.0.0",
+  "images": [
+    {
+      "tag": "race-linux-client:0.0.0",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client"
+    },
+    {
+      "tag": "race-linux-server:0.0.0",
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server"
+    }
+  ],
+  "nodes": {
+    "race-client-00001": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-client-00002": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-client-00003": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-client-00004": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-client-00005": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-client-00006": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-client-00007": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-client-00008": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "client",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00001": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00002": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00003": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00004": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00005": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00006": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00007": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    },
+    "race-server-00008": {
+      "platform": "linux",
+      "architecture": "x86_64",
+      "node_type": "server",
+      "genesis": true,
+      "bridge": false,
+      "gpu": false
+    }
+  },
+  "whiteboards": [
+    "imagegram"
+  ],
+  "aux_services": [
+    "pixelfed-db",
+    "elasticsearch",
+    "jaeger-query",
+    "redis",
+    "pixelfed-app",
+    "race.example2"
+  ]
+}

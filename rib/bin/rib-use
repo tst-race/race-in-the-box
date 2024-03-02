@@ -1,0 +1,50 @@
+#!/usr/bin/env python3
+"""
+Purpose:
+    Run a sub-shell with environment variables defined to enable auto/shortcut
+    deployment commands
+
+Function Call:
+    rib-use RIB_MODE DEPLOYMENT_NAME
+
+Example Call:
+    rib-use local my-local-deployment
+"""
+
+# Python Library Imports
+import click
+import os
+import subprocess
+
+
+@click.command()
+@click.argument("mode", required=True, type=click.Choice(["aws", "local"]))
+@click.argument("name", required=True, type=str)
+@click.option(
+    "--shell",
+    default="/bin/bash",
+    help="Shell to execute",
+    show_default=True,
+)
+def main(mode: str, name: str, shell: str):
+    """Set up deployment shortcuts for a particular deployment"""
+
+    # This assumes the location of the deployment directory in the home directory.
+    # I don't _think_ this is an issue, and I'd rather not import anything from RiB
+    # so it basically has to be hard-coded.
+    deployment_dir = os.path.join(
+        os.getenv("HOME"), ".race", "rib", "deployments", mode, name
+    )
+
+    if not os.path.isdir(deployment_dir):
+        deployments = subprocess.check_output(["rib", "deployment", mode, "list", "-q"], encoding="utf-8")
+        raise click.BadParameter(f"No {mode} deployment exists with name {name}. Use one of:\n\n{deployments}")
+
+    click.echo(f"Using {name} ({mode})")
+    os.environ["RIB_MODE"] = mode
+    os.environ["DEPLOYMENT_NAME"] = name
+    subprocess.run([shell])
+
+
+if __name__ == "__main__":
+    main()

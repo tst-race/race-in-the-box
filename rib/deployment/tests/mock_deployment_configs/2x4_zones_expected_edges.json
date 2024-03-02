@@ -1,0 +1,530 @@
+[
+    {
+        "utilizedBy": [
+            "race-server-00001"
+        ],
+        "connectedTo": [
+            "race-server-00002"
+        ],
+        "profile": "{\"hostname\": \"race-server-00002\", \"port\": 20000, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00002"
+        ],
+        "connectedTo": [
+            "race-server-00001"
+        ],
+        "profile": "{\"hostname\": \"race-server-00002\", \"port\": 20000, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00002"
+        ],
+        "connectedTo": [
+            "race-server-00001"
+        ],
+        "profile": "{\"hostname\": \"race-server-00001\", \"port\": 20001, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00001"
+        ],
+        "connectedTo": [
+            "race-server-00002"
+        ],
+        "profile": "{\"hostname\": \"race-server-00001\", \"port\": 20001, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00003"
+        ],
+        "connectedTo": [
+            "race-server-00004"
+        ],
+        "profile": "{\"hostname\": \"race-server-00004\", \"port\": 20002, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00004"
+        ],
+        "connectedTo": [
+            "race-server-00003"
+        ],
+        "profile": "{\"hostname\": \"race-server-00004\", \"port\": 20002, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00004"
+        ],
+        "connectedTo": [
+            "race-server-00003"
+        ],
+        "profile": "{\"hostname\": \"race-server-00003\", \"port\": 20003, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00003"
+        ],
+        "connectedTo": [
+            "race-server-00004"
+        ],
+        "profile": "{\"hostname\": \"race-server-00003\", \"port\": 20003, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00003"
+        ],
+        "connectedTo": [
+            "race-server-00002"
+        ],
+        "profile": "{\"hostname\": \"race-server-00002\", \"port\": 20002, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00002"
+        ],
+        "connectedTo": [
+            "race-server-00003"
+        ],
+        "profile": "{\"hostname\": \"race-server-00002\", \"port\": 20002, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00001"
+        ],
+        "connectedTo": [
+            "race-server-00004"
+        ],
+        "profile": "{\"hostname\": \"race-server-00004\", \"port\": 20000, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00004"
+        ],
+        "connectedTo": [
+            "race-server-00001"
+        ],
+        "profile": "{\"hostname\": \"race-server-00004\", \"port\": 20000, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00002"
+        ],
+        "connectedTo": [
+            "race-server-00004"
+        ],
+        "profile": "{\"hostname\": \"race-server-00004\", \"port\": 20001, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00004"
+        ],
+        "connectedTo": [
+            "race-server-00002"
+        ],
+        "profile": "{\"hostname\": \"race-server-00004\", \"port\": 20001, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00004"
+        ],
+        "connectedTo": [
+            "race-server-00002"
+        ],
+        "profile": "{\"hostname\": \"race-server-00002\", \"port\": 20003, \"socketType\": \"send\", \"unicast\": true}",
+        "properties": {
+            "type": "send",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "send": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "send": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "send": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    },
+    {
+        "utilizedBy": [
+            "race-server-00002"
+        ],
+        "connectedTo": [
+            "race-server-00004"
+        ],
+        "profile": "{\"hostname\": \"race-server-00002\", \"port\": 20003, \"socketType\": \"receive\", \"unicast\": true}",
+        "properties": {
+            "type": "receive",
+            "unicast": true,
+            "reliable": false,
+            "supported_hints": [],
+            "expected": {
+                "receive": {
+                    "latency_ms": 16,
+                    "bandwidth_bps": 25700000
+                }
+            },
+            "best": {
+                "receive": {
+                    "latency_ms": 14,
+                    "bandwidth_bps": 28270000
+                }
+            },
+            "worst": {
+                "receive": {
+                    "latency_ms": 17,
+                    "bandwidth_bps": 23130000
+                }
+            }
+        }
+    }
+]

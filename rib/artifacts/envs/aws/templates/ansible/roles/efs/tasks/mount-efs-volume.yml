@@ -1,0 +1,36 @@
+---
+
+- name: "Gather {{ volumeName }} EFS Volume Facts"
+  efs_info:
+    region: "{{ awsRegion }}"
+    tags:
+      Name: "race-{{ awsEnvName }}-{{ volumeName }}"
+  delegate_to: localhost
+  register: efs_facts
+
+- name: "Ensure {{ mountPath }} Exists"
+  file:
+    path: "{{ mountPath }}"
+    state: directory
+  become: yes
+
+- name: "Mount {{ volumeName }} EFS Volume"
+  mount:
+    src: "{{ efs_facts.efs.0.file_system_id }}"
+    path: "{{ mountPath }}"
+    fstype: efs
+    opts: tls
+    state: mounted
+  register: result
+  until: result is not failed
+  retries: 10
+  delay: 10
+  become: yes
+
+- name: "Fix {{ volumeName }} Mount Directory Permissions"
+  file:
+    path: "{{ mountPath }}"
+    state: directory
+    mode: "0775"
+    owner: "{{ ansible_ssh_user }}"
+  become: yes

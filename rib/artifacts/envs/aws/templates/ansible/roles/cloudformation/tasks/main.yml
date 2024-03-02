@@ -1,0 +1,154 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - awsEnvName is defined
+      - awsRegion is defined
+      - awsEnvOwner is defined
+      - sshKeyName is defined
+      - remoteUsername is defined
+      - managerIpAddress is defined
+      - clusterManagerType is defined
+      - clusterManagerAmi is defined
+      - clusterManagerEbsSize is defined
+      - serviceHostType is defined
+      - serviceHostAmi is defined
+      - serviceHostEbsSize is defined
+      - linuxArmHostType is defined
+      - linuxArmHostAmi is defined
+      - linuxArmHostEbsSize is defined
+      - linuxArmHostCount is defined
+      - linuxX86HostType is defined
+      - linuxX86HostAmi is defined
+      - linuxX86HostEbsSize is defined
+      - linuxX86HostCount is defined
+      - linuxGpuArmHostType is defined
+      - linuxGpuArmHostAmi is defined
+      - linuxGpuArmHostEbsSize is defined
+      - linuxGpuArmHostCount is defined
+      - linuxGpuX86HostType is defined
+      - linuxGpuX86HostAmi is defined
+      - linuxGpuX86HostEbsSize is defined
+      - linuxGpuX86HostCount is defined
+      - androidArmHostType is defined
+      - androidArmHostAmi is defined
+      - androidArmHostEbsSize is defined
+      - androidArmHostCount is defined
+      - androidX86HostType is defined
+      - androidX86HostAmi is defined
+      - androidX86HostEbsSize is defined
+      - androidX86HostCount is defined
+  check_mode: true
+
+- name: Create RACE Network CloudFormation Stack
+  cloudformation:
+    stack_name: "race-{{ awsEnvName }}-network"
+    state: "present"
+    region: "{{ awsRegion }}"
+    on_create_failure: "DELETE"
+    template: "roles/cloudformation/files/network.yml"
+    template_parameters:
+      AwsEnvName: "{{ awsEnvName }}"
+      ManagerIpAddress: "{{ managerIpAddress }}"
+    tags:
+      AwsEnvName: "{{ awsEnvName }}"
+      AwsEnvOwner: "{{ awsEnvOwner }}"
+      Stack: "race-{{ awsEnvName }}-network"
+      Creator: "rib"
+      race_cost_service: "RiB AWS Env"
+
+- name: Create RACE EFS CloudFormation Stack
+  cloudformation:
+    stack_name: "race-{{ awsEnvName }}-efs"
+    state: "present"
+    region: "{{ awsRegion }}"
+    on_create_failure: "DELETE"
+    template: "roles/cloudformation/files/efs.yml"
+    template_parameters:
+      AwsEnvName: "{{ awsEnvName }}"
+    tags:
+      AwsEnvName: "{{ awsEnvName }}"
+      AwsEnvOwner: "{{ awsEnvOwner }}"
+      Stack: "race-{{ awsEnvName }}-efs"
+      Creator: "rib"
+      race_cost_service: "RiB AWS Env"
+
+- name: Create Cluster Manager EC2 CloudFormation Stack
+  import_tasks: create-ec2-instance.yml
+  vars:
+    amazonInstanceType: "{{ clusterManagerType }}"
+    amazonLinuxAMIID: "{{ clusterManagerAmi }}"
+    clusterRole: "cluster-manager"
+    ebsSize: "{{ clusterManagerEbsSize }}"
+
+- name: Create Service Host EC2 CloudFormation Stack
+  import_tasks: create-ec2-instance.yml
+  vars:
+    amazonInstanceType: "{{ serviceHostType }}"
+    amazonLinuxAMIID: "{{ serviceHostAmi }}"
+    clusterRole: "service-host"
+    ebsSize: "{{ serviceHostEbsSize }}"
+
+- name: Create Linux ARM Node Host EC2 CloudFormation Stack
+  import_tasks: create-ec2-autoscale.yml
+  vars:
+    amazonInstanceType: "{{ linuxArmHostType }}"
+    amazonLinuxAMIID: "{{ linuxArmHostAmi }}"
+    clusterRole: "linux-arm64-node-host"
+    ebsSize: "{{ linuxArmHostEbsSize }}"
+    numInstances: "{{ linuxArmHostCount }}"
+  when: linuxArmHostCount > 0
+
+- name: Create Linux x86 Node Host EC2 CloudFormation Stack
+  import_tasks: create-ec2-autoscale.yml
+  vars:
+    amazonInstanceType: "{{ linuxX86HostType }}"
+    amazonLinuxAMIID: "{{ linuxX86HostAmi }}"
+    clusterRole: "linux-x86-64-node-host"
+    ebsSize: "{{ linuxX86HostEbsSize }}"
+    numInstances: "{{ linuxX86HostCount }}"
+  when: linuxX86HostCount > 0
+
+- name: Create Android ARM Node Host EC2 CloudFormation Stack
+  import_tasks: create-ec2-autoscale.yml
+  vars:
+    amazonInstanceType: "{{ androidArmHostType }}"
+    amazonLinuxAMIID: "{{ androidArmHostAmi }}"
+    clusterRole: "android-arm64-node-host"
+    ebsSize: "{{ androidArmHostEbsSize }}"
+    numInstances: "{{ androidArmHostCount }}"
+  when: androidArmHostCount > 0
+
+- name: Create Android x86 Node Host EC2 CloudFormation Stack
+  import_tasks: create-ec2-autoscale.yml
+  vars:
+    amazonInstanceType: "{{ androidX86HostType }}"
+    amazonLinuxAMIID: "{{ androidX86HostAmi }}"
+    clusterRole: "android-x86-64-node-host"
+    ebsSize: "{{ androidX86HostEbsSize }}"
+    numInstances: "{{ androidX86HostCount }}"
+  when: androidX86HostCount > 0
+
+- name: Create GPU ARM Node Host EC2 CloudFormation Stack
+  import_tasks: create-ec2-autoscale.yml
+  vars:
+    amazonInstanceType: "{{ linuxGpuArmHostType }}"
+    amazonLinuxAMIID: "{{ linuxGpuArmHostAmi }}"
+    clusterRole: "linux-gpu-arm64-node-host"
+    ebsSize: "{{ linuxGpuArmHostEbsSize }}"
+    numInstances: "{{ linuxGpuArmHostCount }}"
+  when: linuxGpuArmHostCount > 0
+
+- name: Create GPU x86 Node Host EC2 CloudFormation Stack
+  import_tasks: create-ec2-autoscale.yml
+  vars:
+    amazonInstanceType: "{{ linuxGpuX86HostType }}"
+    amazonLinuxAMIID: "{{ linuxGpuX86HostAmi }}"
+    clusterRole: "linux-gpu-x86-64-node-host"
+    ebsSize: "{{ linuxGpuX86HostEbsSize }}"
+    numInstances: "{{ linuxGpuX86HostCount }}"
+  when: linuxGpuX86HostCount > 0
+
+- name: Refresh Dynamic Inventory
+  meta: refresh_inventory

@@ -1,0 +1,43 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - deploymentName is defined
+      - dockerComposeDir is defined
+      - dockerComposeFile is defined
+      - dockerComposeProjectName is defined
+  check_mode: true
+
+- name: Ensure Docker Compose Directory Exists
+  file:
+    path: "/home/{{ ansible_ssh_user }}/docker-compose"
+    state: directory
+
+- name: "Copy Docker Compose File"
+  copy:
+    src: "{{ dockerComposeDir }}/{{ dockerComposeFile }}"
+    dest: "/home/{{ ansible_ssh_user }}/docker-compose/{{ dockerComposeFile }}"
+
+- name: "Start Docker Compose Services"
+  docker_compose:
+    state: present
+    project_name: "{{ dockerComposeProjectName }}"
+    project_src: "/home/{{ ansible_ssh_user }}/docker-compose/"
+    files: "{{ dockerComposeFile }}"
+    pull: yes
+  environment:
+    DOCKER_CLIENT_TIMEOUT: 600
+    COMPOSE_HTTP_TIMEOUT: 600
+    DEPLOYMENT_NAME: "{{ deploymentName }}"
+  vars:
+    # We have to run Ansible under python2 because Ansible under python3
+    # does not have support for yum, only dnf. But Amazon Linux 2 uses
+    # yum and not dnf. So any commands using yum (at a minimum) have to be
+    # run with Ansible & python2. However, the docker-compose Python
+    # package stopped supporting python2 with version 1.27. We need 1.28+
+    # in order to support the `devices` capabilities for Android & GPU.
+    # Since python2 is generally more available, Ansible is more battle-proven
+    # against python2 than python3. So we are running _this_ task with python3
+    # so we can use docker-compose 1.29. Thanks Guido.
+    ansible_python_interpreter: python3

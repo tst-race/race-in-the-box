@@ -1,0 +1,25 @@
+rib-redis:
+  image: redis:6.0.6
+  container_name: rib-redis
+  hostname: rib-redis
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  networks:
+    - outside
+  healthcheck:
+    test: ["CMD", "redis-cli", "ping"]
+    interval: 5s
+    retries: 30
+    timeout: 20s
+
+rib-file-server:
+  image: ghcr.io/tst-race/race-core/twosix-file-server:main
+  container_name: rib-file-server
+  hostname: rib-file-server
+  init: true
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  networks:
+    - outside

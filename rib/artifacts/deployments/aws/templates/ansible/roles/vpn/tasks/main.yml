@@ -1,0 +1,7 @@
+---
+
+- include_role:
+    name: docker-compose
+  vars:
+    dockerComposeProjectName: vpn
+    dockerComposeFile: vpn.yml

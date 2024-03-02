@@ -1,0 +1,154 @@
+name: Continuous Integration
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    branches:
+      - 'main'
+
+permissions:
+  checks: write
+  contents: read
+  packages: write
+  pull-requests: write
+
+jobs:
+  build-rib-image:
+    uses: ./.github/workflows/build-image.yml
+    with:
+      context: .
+      dockerfile: docker-image/Dockerfile
+      image-name: race-in-the-box
+      platforms: linux/amd64,linux/arm64
+
+  build-ui-image:
+    uses: ./.github/workflows/build-image.yml
+    with:
+      context: webapp
+      dockerfile: webapp/Dockerfile
+      image-name: race-in-the-box-ui
+      platforms: linux/amd64,linux/arm64 
+    
+  build-graph-renderer-image:
+    uses: ./.github/workflows/build-image.yml
+    with: 
+      context: graph_renderer
+      dockerfile: graph_renderer/Dockerfile
+      image-name: graph_renderer
+      platforms: linux/amd64,linux/arm64 
+  
+  create-openapi-spec:
+    runs-on: ubuntu-latest
+    container: ${{ needs.build-rib-image.outputs.image-name }}
+    needs: build-rib-image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - run: python3 scripts/internal/initialize_rib_state.py
+      - run: python3 scripts/internal/generate_openapi_spec.py openapi.json
+
+      - name: Upload Image Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: openapi-spec
+          path: openapi.json
+
+  check-style-rib:
+    runs-on: ubuntu-latest
+    container: ${{ needs.build-rib-image.outputs.image-name }}
+    needs: build-rib-image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - run: python3 scripts/internal/initialize_rib_state.py
+
+      - run: make pylint
+
+      - run: make pylint_errors
+        if: success() || failure()
+
+      - run: make black_check
+        if: success() || failure()
+
+  check-style-webapp:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - run: npm ci
+        working-directory: webapp
+
+      - run: npm run validate
+        working-directory: webapp
+
+  test-rib:
+    runs-on: ubuntu-latest
+    container: ${{ needs.build-rib-image.outputs.image-name }}
+    needs: build-rib-image
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - run: python3 scripts/internal/initialize_rib_state.py
+
+      - run: pip install -r rib/requirements_test.txt
+        working-directory: /race_in_the_box/
+
+      - run: make test_unit
+        working-directory: /race_in_the_box/
+
+      - run: cp /race_in_the_box/reports/coverage/junit-coverage.xml .
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: success() || failure()
+        with:
+          files: junit-coverage.xml
+
+  test-shellcheck:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install shellcheck
+        run: |
+          sudo apt-get update
+          sudo apt-get install shellcheck
+
+      - name: Run shellcheck
+        run: |
+          find scripts/ -type f -name '*.sh' | xargs shellcheck
+          shellcheck docker-image/build_race_in_the_box.sh
+          shellcheck docker-image/rib.sh
+          shellcheck webapp/build_image.sh
+          CURRENT_RIB_VERSION=$(cat ./VERSION)
+          shellcheck entrypoints/rib_${CURRENT_RIB_VERSION}.sh
+
+  test-webapp:
+    runs-on: ubuntu-latest
+    needs: create-openapi-spec
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - uses: actions/download-artifact@v3
+        with:
+          name: openapi-spec
+          path: webapp/src/test/
+
+      - run: npm ci
+        working-directory: webapp
+
+      - run: npm run test:ci
+        working-directory: webapp
+
+      - name: Publish Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: success() || failure()
+        with:
+          files: webapp/junit.xml

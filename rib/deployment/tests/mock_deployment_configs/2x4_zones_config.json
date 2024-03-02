@@ -1,0 +1,96 @@
+{
+    "range": {
+        "RACE_nodes": [
+            {
+                "name": "race-client-00001",
+                "type": "RACE linux client",
+                "mgmt_name": "unknown",
+                "mgmt_ip": "unknown",
+                "host_ip": "172.26.6.9",
+                "range_ip": "race-client-00001",
+                "host": "largeBusiness1ClientHost1Containers1",
+                "enclave": "global",
+                "zone": "USER",
+                "reachable": [
+                    "race-server-00002",
+                    "race-server-00004"
+                ]
+            },
+            {
+                "name": "race-client-00002",
+                "type": "RACE linux client",
+                "mgmt_name": "unknown",
+                "mgmt_ip": "unknown",
+                "host_ip": "172.26.6.13",
+                "range_ip": "race-client-00002",
+                "host": "largeBusiness2ClientHost1Containers1",
+                "enclave": "global",
+                "zone": "USER",
+                "reachable": [
+                    "race-server-00002",
+                    "race-server-00004"
+                ]
+            },
+            {
+                "name": "race-server-00001",
+                "type": "RACE linux server",
+                "mgmt_name": "unknown",
+                "mgmt_ip": "unknown",
+                "host_ip": "172.26.6.10",
+                "range_ip": "race-server-00001",
+                "host": "largeBusiness1ServerHost1Containers1",
+                "enclave": "largeBusiness1",
+                "zone": "SERVICE",
+                "reachable": [
+                    "race-server-00002",
+                    "race-server-00004"
+                ]
+            },
+            {
+                "name": "race-server-00002",
+                "type": "RACE linux server",
+                "mgmt_name": "unknown",
+                "mgmt_ip": "unknown",
+                "host_ip": "172.26.6.14",
+                "range_ip": "race-server-00002",
+                "host": "largeBusiness1ServerHost2Containers1",
+                "enclave": "largeBusiness1",
+                "zone": "DMZ",
+                "reachable": [
+                    "race-server-00001",
+                    "race-server-00004"
+                ]
+            },
+            {
+                "name": "race-server-00003",
+                "type": "RACE linux server",
+                "mgmt_name": "unknown",
+                "mgmt_ip": "unknown",
+                "host_ip": "172.26.6.18",
+                "range_ip": "race-server-00003",
+                "host": "largeBusiness2ServerHost1Containers1",
+                "enclave": "largeBusiness2",
+                "zone": "SERVICE",
+                "reachable": [
+                    "race-server-00002",
+                    "race-server-00004"
+                ]
+            },
+            {
+                "name": "race-server-00004",
+                "type": "RACE linux server",
+                "mgmt_name": "unknown",
+                "mgmt_ip": "unknown",
+                "host_ip": "172.26.6.22",
+                "range_ip": "race-server-00004",
+                "host": "largeBusiness2ServerHost2Containers1",
+                "enclave": "largeBusiness2",
+                "zone": "DMZ",
+                "reachable": [
+                    "race-server-00003",
+                    "race-server-00002"
+                ]
+            }
+        ]
+    }
+}

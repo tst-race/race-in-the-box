@@ -1,0 +1,9 @@
+#!/bin/sh
+# Run black format validation prior to commiting
+# Copy this file to .git/hooks/pre-commit in your cloned repository
+
+repo_root=$(git rev-parse --show-toplevel)
+
+if [ -z $SKIP_BLACK_HOOK ]; then
+    (cd $repo_root && make black_check)
+fi

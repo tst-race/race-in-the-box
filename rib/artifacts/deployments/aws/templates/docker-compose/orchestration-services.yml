@@ -1,0 +1,37 @@
+rib-redis:
+  image: redis:6.0.6
+  hostname: rib-redis
+  container_name: rib-redis
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  ports:
+    - "6379:6379"
+  healthcheck:
+    test: ["CMD", "redis-cli", "ping"]
+    interval: 5s
+    retries: 30
+    timeout: 20s
+
+rib-file-server:
+  image: ghcr.io/tst-race/race-core/twosix-file-server:main
+  hostname: rib-file-server
+  container_name: rib-file-server
+  init: true
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  ports:
+    - "3453:8080"

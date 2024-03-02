@@ -1,0 +1,35 @@
+---
+
+###
+# Play to Get Docker Status
+###
+
+- name: Get Docker Status On Remote Hosts
+  hosts: all
+  gather_facts: no
+
+  ###
+  # Variables in Play
+  ###
+
+  vars:
+    varPath: ""
+
+  ###
+  # Tasks in Play
+  ###
+
+  tasks:
+
+    - name: Get Docker Container Status
+      uri:
+        unix_socket: /var/run/docker.sock
+        url: http://localhost/v1.41/containers/json
+        force: yes
+      register: containerStatus
+
+    - name: Write Container Status to Local Disk
+      local_action:
+        module: copy
+        content: "{{ containerStatus.json }}"
+        dest: "{{ varPath }}/docker-container-status_{{ inventory_hostname }}.json"

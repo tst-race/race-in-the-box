@@ -1,0 +1,29 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - deploymentName is defined
+      - dockerComposeDir is defined
+      - stack is defined
+  check_mode: true
+
+- name: Ensure Docker Compose Directory Exists
+  file:
+    path: "/home/{{ ansible_ssh_user }}/docker-compose"
+    state: directory
+
+- name: "Copy {{ stack }} Compose"
+  copy:
+    src: "{{ dockerComposeDir }}/{{ stack }}.yml"
+    dest: "/home/{{ ansible_ssh_user }}/docker-compose/{{ stack }}.yml"
+
+- name: "Run {{ stack }} Stack"
+  docker_stack:
+    state: present
+    name: "{{ stack }}"
+    compose:
+      - "/home/{{ ansible_ssh_user }}/docker-compose/{{ stack }}.yml"
+    with_registry_auth: yes
+  environment:
+    DEPLOYMENT_NAME: "{{ deploymentName }}"

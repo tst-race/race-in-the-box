@@ -1,0 +1,16 @@
+---
+
+- name: Configure Docker Service
+  import_tasks: configure-docker.yml
+
+- name: Configure Swarm Manager
+  import_tasks: configure-swarm-manager.yml
+  when: "inventory_hostname in groups.cluster_manager"
+
+- name: Configure Swarm Worker
+  import_tasks: configure-swarm-worker.yml
+  when: "inventory_hostname in groups.cluster_worker"
+
+- name: Set Swarm Node Labels
+  import_tasks: set-node-labels.yml
+  when: "inventory_hostname in groups.cluster_manager"

@@ -1,0 +1,27 @@
+---
+
+- include_role:
+    name: docker-stack
+  vars:
+    stack: opentracing
+
+- name: Wait For ElasticSearch
+  local_action:
+    module: wait_for
+    host: "{{ inventory_hostname }}"
+    port: 9200
+    state: started
+
+- name: Wait For Kibana
+  local_action:
+    module: wait_for
+    host: "{{ inventory_hostname }}"
+    port: 5601
+    state: started
+
+- name: Wait For Jaeger UI
+  local_action:
+    module: wait_for
+    host: "{{ inventory_hostname }}"
+    port: 16686
+    state: started

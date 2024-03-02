@@ -1,0 +1,41 @@
+{node_name}:
+  image: {image}
+  hostname: {node_name}
+  {optional_depends_on}
+  container_name: {node_name}
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  # TODO, add resource limits
+  # Disabling resource limits during 1.4.0 testing. CPU limits on android cause
+  # massive delays in starting up and running the emulator that make deployments
+  # unusable. memory limits are, while necessary, very basic and could cause issues
+  # that should be done after discussion with performers about RACE resources
+  # deploy:
+  #   resources:
+  #     limits:
+  #       memory: "memory_limit" # needs to be a variable, removing brackets until reenabled due to python .format()
+  #       cpus: cpu_limit  # needs to be a variable, removing brackets until reenabled due to python .format()
+  # Add depends_on pixelfed_app if the service is on
+  {service_depends_on}
+  # Adding all nodes to outisde network which also contains pixelfed services.
+  # This allows nodes to communicate with pixelfed using it's container name.
+  # The subnet for "outside" has been hard coded in networks.yml
+  networks:
+    - outside
+  {override_port_mappings}
+  working_dir: /code/
+  environment:
+    RACE_PERSONA: {node_name}
+    RACE_NODE_TYPE: {node_type}
+    REPORTER_GRPC_HOST_PORT: localhost:14250
+    SPAN_STORAGE_TYPE: elasticsearch
+    ES_SERVER_URLS: http://elasticsearch:9200
+    UNINSTALL_RACE: {uninstall_race}
+    RACE_ENCRYPTION_TYPE: {race_encryption_type}
+    AGENT_TAGS: range-name=${{DEPLOYMENT_NAME}}
+    {override_env_variables}
+  volumes:
+    - ${{HOST_RIB_STATE_PATH}}/deployments/local/${{DEPLOYMENT_NAME}}/logs/{node_name}/:/log
+    {tmpfs_mount}
+  {override_vars}

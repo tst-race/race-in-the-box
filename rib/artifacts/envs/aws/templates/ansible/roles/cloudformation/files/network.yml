@@ -1,0 +1,363 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: Network Stack for RACE
+
+###########
+# Parameters
+###########
+
+Parameters:
+
+  ###########
+  # AWS Env Name
+  ###########
+
+  AwsEnvName:
+    Type: String
+    Description: Name of the AWS Env in RACE, used for all created resources
+
+  ###########
+  # Cidrs
+  ###########
+
+  BaseCidr:
+    Type: String
+    Description: Address space for all AWS instances/resources used by RACE
+    Default: 10.0.0.0/16
+
+  PublicSubnetCidr:
+    Type: String
+    Description: Subnet for public connectivity to AWS instances used by RACE
+    Default: 10.0.0.0/24
+
+  # PrivateSubnetCidr:
+  #   Type: String
+  #   Description: Subnet for private connectivity to AWS instances used by RACE
+  #   Default: 10.0.1.0/24
+
+  ###########
+  # IP Addresses
+  ###########
+
+  ManagerIpAddress:
+    Type: String
+    Description: IP Address of Manager of AWS. Will be set by scripts to IP of whoever starts Network
+
+###########
+# Resources
+###########
+
+Resources:
+
+  ###########
+  # VPCs
+  ###########
+
+  Vpc:
+    Type: AWS::EC2::VPC
+    Properties:
+      CidrBlock: !Ref BaseCidr
+      EnableDnsSupport: true
+      EnableDnsHostnames: true
+      Tags:
+        - Key: Name
+          Value: !Sub race-${AwsEnvName}-Vpc
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+
+  ###########
+  # IGWs
+  ###########
+
+  Igw:
+    Type: AWS::EC2::InternetGateway
+    Properties:
+      Tags:
+        - Key: Name
+          Value: !Sub race-${AwsEnvName}-Igw
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+
+  ConnectorVpcToIgw:
+    Type: AWS::EC2::VPCGatewayAttachment
+    DependsOn:
+      - Vpc
+      - Igw
+    Properties:
+      InternetGatewayId: !Ref Igw
+      VpcId: !Ref Vpc
+
+  ###########
+  # Public Route Table
+  ###########
+
+  PublicRouteTable:
+    Type: AWS::EC2::RouteTable
+    DependsOn:
+      - Vpc
+    Properties:
+      VpcId: !Ref Vpc
+      Tags:
+        - Key: Name
+          Value: !Sub race-${AwsEnvName}-PublicRouteTable
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+
+  PublicRouteToIgw:
+    Type: AWS::EC2::Route
+    DependsOn:
+      - Igw
+      - PublicRouteTable
+    Properties:
+      DestinationCidrBlock: 0.0.0.0/0
+      GatewayId: !Ref Igw
+      RouteTableId: !Ref PublicRouteTable
+
+  ###########
+  # Private Route Table
+  ###########
+
+  # PrivateRouteTable:
+  #   Type: AWS::EC2::RouteTable
+  #   DependsOn:
+  #     - Vpc
+  #   Properties:
+  #     VpcId: !Ref Vpc
+  #     Tags:
+  #       - Key: Name
+  #         Value: !Sub race-${AwsEnvName}-PrivateRouteTable
+  #       - Key: race_cost_service
+  #         Value: "RiB AWS Env"
+
+  # PrivateRouteToNat:
+  #   Type: AWS::EC2::Route
+  #   DependsOn:
+  #     - PrivateRouteTable
+  #     - PrivateNatGateway
+  #   Properties:
+  #     DestinationCidrBlock: 0.0.0.0/0
+  #     NatGatewayId: !Ref PrivateNatGateway
+  #     RouteTableId: !Ref PrivateRouteTable
+
+  ###########
+  # Public Subnet
+  ###########
+
+  PublicSubnet:
+    Type: AWS::EC2::Subnet
+    DependsOn:
+      - Vpc
+    Properties:
+      VpcId: !Ref Vpc
+      MapPublicIpOnLaunch: true
+      CidrBlock: !Ref PublicSubnetCidr
+      AvailabilityZone: !Select
+        - 0
+        - !GetAZs
+          Ref: AWS::Region
+      Tags:
+        - Key: Name
+          Value: !Sub race-${AwsEnvName}-PublicSubnet
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+
+  PublicRouteTableAssociation:
+    Type: AWS::EC2::SubnetRouteTableAssociation
+    DependsOn:
+      - PublicRouteTable
+      - PublicSubnet
+    Properties:
+      RouteTableId: !Ref PublicRouteTable
+      SubnetId: !Ref PublicSubnet
+
+  ###########
+  # NAT Gateway
+  ###########
+
+  # PrivateNatGatewayElasticIp:
+  #   Type: AWS::EC2::EIP
+  #   Properties:
+  #     Tags:
+  #       - Key: Name
+  #         Value: !Sub race-${AwsEnvName}-PrivateNatGatewayElasticIp
+  #       - Key: race_cost_service
+  #         Value: "RiB AWS Env"
+
+  # PrivateNatGateway:
+  #   Type: AWS::EC2::NatGateway
+  #   DependsOn:
+  #     - PrivateNatGatewayElasticIp
+  #   Properties:
+  #     AllocationId:
+  #       Fn::GetAtt:
+  #         - PrivateNatGatewayElasticIp
+  #         - AllocationId
+  #     SubnetId: !Ref PublicSubnet
+  #     Tags:
+  #       - Key: Name
+  #         Value: !Sub race-${AwsEnvName}-PrivateNatGateway
+  #       - Key: race_cost_service
+  #         Value: "RiB AWS Env"
+
+  ###########
+  # Private Subnet
+  ###########
+
+  # PrivateSubnet:
+  #   Type: AWS::EC2::Subnet
+  #   DependsOn:
+  #     - Vpc
+  #   Properties:
+  #     VpcId: !Ref Vpc
+  #     CidrBlock: !Ref PrivateSubnetCidr
+  #     AvailabilityZone: !Select
+  #       - 0
+  #       - !GetAZs
+  #         Ref: AWS::Region
+  #     Tags:
+  #       - Key: Name
+  #         Value: !Sub race-${AwsEnvName}-PrivateSubnet
+  #       - Key: race_cost_service
+  #         Value: "RiB AWS Env"
+
+  # PrivateRouteTableAssociation:
+  #   Type: AWS::EC2::SubnetRouteTableAssociation
+  #   DependsOn:
+  #     - PrivateRouteTable
+  #     - PrivateSubnet
+  #   Properties:
+  #     RouteTableId: !Ref PrivateRouteTable
+  #     SubnetId: !Ref PrivateSubnet
+
+  ###########
+  # Security Groups
+  ###########
+
+  ### Global Access
+
+  PrivateGlobalAccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn: Vpc
+    Properties:
+      GroupName: !Sub race-${AwsEnvName}-PrivateGlobalAccessSecurityGroup
+      GroupDescription: Global Access within the VPC. All Protocols, Ports, Subnets
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: !Ref BaseCidr
+      Tags:
+        - Key: Name
+          Value: !Sub race-${AwsEnvName}-PrivateGlobalAccessSecurityGroup
+        - Key: type
+          Value: private
+        - Key: sub-type
+          Value: global
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+
+  ManagementGlobalAccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - Vpc
+    Properties:
+      GroupName: !Sub race-${AwsEnvName}-ManagementGlobalAccessSecurityGroup
+      GroupDescription: Global Access from the Management IP . All Protocols, Ports, Subnets
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - IpProtocol: -1
+          FromPort: -1
+          ToPort: -1
+          CidrIp: !Ref ManagerIpAddress
+      Tags:
+        - Key: Name
+          Value: !Sub race-${AwsEnvName}-ManagementGlobalAccessSecurityGroup
+        - Key: type
+          Value: management
+        - Key: sub-type
+          Value: global
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+
+  ### SSH Access
+
+  PublicSshAccessSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    DependsOn:
+      - Vpc
+    Properties:
+      GroupName: !Sub race-${AwsEnvName}-PublicSshAccessSecurityGroup
+      GroupDescription: Public SSH Access
+      VpcId: !Ref Vpc
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 22
+          ToPort: 22
+          CidrIp: 0.0.0.0/0
+      Tags:
+        - Key: Name
+          Value: !Sub race-${AwsEnvName}-PublicSshAccessSecurityGroup
+        - Key: type
+          Value: public
+        - Key: sub-type
+          Value: ssh
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+
+###########
+# Outputs
+###########
+
+Outputs:
+
+  ###########
+  # VPCs
+  ###########
+
+  VpcId:
+    Description: VpcId
+    Value: !Ref Vpc
+    Export:
+      Name: !Sub "race-${AwsEnvName}-VpcId"
+
+  ###########
+  # Subnets
+  ###########
+
+  PublicSubnetId:
+    Description: PublicSubnetId
+    Value: !Ref PublicSubnet
+    Export:
+      Name: !Sub "race-${AwsEnvName}-PublicSubnetId"
+
+  # PrivateSubnetId:
+  #   Description: PrivateSubnetId
+  #   Value: !Ref PrivateSubnet
+  #   Export:
+  #     Name: !Sub "race-${AwsEnvName}-PrivateSubnetId"
+
+  ###########
+  # Security Groups
+  ###########
+
+  ### Global Access
+
+  PrivateGlobalAccessSecurityGroupId:
+    Description: PrivateGlobalAccessSecurityGroupId
+    Value: !Ref PrivateGlobalAccessSecurityGroup
+    Export:
+      Name: !Sub "race-${AwsEnvName}-PrivateGlobalAccessSecurityGroupId"
+
+  ManagementGlobalAccessSecurityGroupId:
+    Description: ManagementGlobalAccessSecurityGroupId
+    Value: !Ref ManagementGlobalAccessSecurityGroup
+    Export:
+      Name: !Sub "race-${AwsEnvName}-ManagementGlobalAccessSecurityGroupId"
+
+  ### SSH Access
+
+  PublicSshAccessSecurityGroupId:
+    Description: PublicSshAccessSecurityGroupId
+    Value: !Ref PublicSshAccessSecurityGroup
+    Export:
+      Name: !Sub "race-${AwsEnvName}-PublicSshAccessSecurityGroupId"

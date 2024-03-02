@@ -1,0 +1,11 @@
+---
+
+- name: Get Join-Token For Worker Hosts
+  set_fact:
+    join_token_worker: "{{ hostvars[groups['cluster_manager'][0]].swarm.swarm_facts.JoinTokens.Worker }}"
+
+- name: Join Swarm As Worker
+  docker_swarm:
+    join_token: "{{ join_token_worker }}"
+    remote_addrs: "{{ hostvars[groups['cluster_manager'][0]].ansible_hostname }}:2377"
+    state: join

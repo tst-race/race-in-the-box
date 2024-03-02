@@ -1,0 +1,25 @@
+---
+
+- name: Check If Docker Compose Project Exists
+  stat:
+    path: "/home/{{ ansible_ssh_user }}/docker-compose/vpn.yml"
+  register: vpn_docker_compose
+
+- name: Stop VPN
+  docker_compose:
+    state: absent
+    project_name: vpn
+    project_src: "/home/{{ ansible_ssh_user }}/docker-compose/"
+    files: vpn.yml
+  environment:
+    DOCKER_CLIENT_TIMEOUT: 600
+    COMPOSE_HTTP_TIMEOUT: 600
+  vars:
+    # See roles/race-nodes/tasks/start-race-nodes.yml for explanation why we use python3 here
+    ansible_python_interpreter: python3
+  when: vpn_docker_compose.stat.exists
+
+- name: Remove Docker Compose Project
+  file:
+    path: "/home/{{ ansible_ssh_user }}/docker-compose/vpn.yml"
+    state: absent

@@ -1,0 +1,50 @@
+---
+
+- name: "Extract {{ item[0] }}-{{ item[1] }} Mount Artifacts"
+  include_tasks: extract-mount-artifacts.yml
+  vars:
+    artifact_type: "{{ item[0] }}-{{ item[1] }}"
+  loop:  "{{ mount_artifacts | product(['client', 'server']) | list }}"
+
+- name: "Determine Index Of Host Within {{ race_host_type }} Group"
+  set_fact:
+    race_host_index: "{{ race_hosts.index(inventory_hostname) }}"
+
+- name: "Check if {{ race_host_type }} RACE Nodes Docker Compose Project Exists"
+  stat:
+    path: "{{ dockerComposeDir }}/{{ race_host_type }}-nodes-{{ race_host_index }}.yml"
+  delegate_to: localhost
+  register: race_host_project_stat
+
+- name: "Copy {{ race_host_type }} RACE Nodes Docker Compose Project"
+  copy:
+    src: "{{ dockerComposeDir }}/{{ race_host_type }}-nodes-{{ race_host_index }}.yml"
+    dest: "/home/{{ ansible_ssh_user }}/docker-compose/docker-compose.yml"
+  when: race_host_project_stat.stat.exists == true
+
+- name: "Start {{ race_host_type }} RACE Nodes"
+  docker_compose:
+    state: present
+    project_name: race_nodes
+    project_src: "/home/{{ ansible_ssh_user }}/docker-compose/"
+    pull: yes
+  environment:
+    DOCKER_CLIENT_TIMEOUT: 600
+    COMPOSE_HTTP_TIMEOUT: 600
+    DEPLOYMENT_NAME: "{{ deploymentName }}"
+  vars:
+    # We have to run Ansible under python2 because Ansible under python3
+    # does not have support for yum, only dnf. But Amazon Linux 2 uses
+    # yum and not dnf. So any commands using yum (at a minimum) have to be
+    # run with Ansible & python2. However, the docker-compose Python
+    # package stopped supporting python2 with version 1.27. We need 1.28+
+    # in order to support the `devices` capabilities for Android & GPU.
+    # Since python2 is generally more available, Ansible is more battle-proven
+    # against python2 than python3. So we are running _this_ task with python3
+    # so we can use docker-compose 1.29. Thanks Guido.
+    ansible_python_interpreter: python3
+  register: result
+  until: result is not failed
+  retries: 5
+  delay: 10
+  when: race_host_project_stat.stat.exists == true

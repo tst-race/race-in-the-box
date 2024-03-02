@@ -1,0 +1,47 @@
+---
+
+###
+# Play To Check That Service Hosts Exist
+###
+
+- name: Check For Service Hosts
+  hosts: localhost
+  gather_facts: no
+
+  ###
+  # Tasks in Play
+  ###
+
+  tasks:
+
+    - name: Fail If No Service Hosts Are Running
+      fail:
+        msg: "No service hosts available"
+      when: "'service_host' not in groups"
+
+###
+# Play to Status a Set of External Services for a Comms Channel
+###
+
+- name: Status a Set of External Services for a Comms Channel
+  hosts: service_host
+  gather_facts: no
+
+  ###
+  # Variables for Play
+  ###
+
+  vars:
+    - pathsToScripts: []
+    - remoteUsername: ""
+
+  ###
+  # Tasks in Play
+  ###
+
+  tasks:
+
+    - name: Run status_external_services.sh for each Channel
+      shell: "bash /home/{{ remoteUsername }}/{{ item }}/get_status_of_external_services.sh"
+      loop: "{{ pathsToScripts }}"
+

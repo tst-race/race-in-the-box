@@ -1,0 +1,5 @@
+---
+
+- name: Configure ARM Host
+  import_tasks: configure-arm-host.yml
+  when: "'aarch' in ansible_architecture"

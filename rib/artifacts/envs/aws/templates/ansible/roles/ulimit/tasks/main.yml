@@ -1,0 +1,9 @@
+---
+
+- name: Increase file ulimit
+  pam_limits:
+    domain: "*"
+    limit_item: nofile
+    limit_type: "-"
+    value: unlimited
+  become: yes

@@ -1,0 +1,14 @@
+---
+
+- include_role:
+    name: docker-compose
+  vars:
+    dockerComposeProjectName: orchestration
+    dockerComposeFile: orchestration.yml
+
+- name: Wait For File Server
+  local_action:
+    module: wait_for
+    host: "{{ inventory_hostname }}"
+    port: 3453
+    state: started

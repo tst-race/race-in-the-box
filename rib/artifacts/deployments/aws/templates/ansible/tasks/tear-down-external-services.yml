@@ -1,0 +1,15 @@
+---
+
+- name: Check If Comms Channel External Services Scripts Exist
+  stat:
+    path: "/home/{{ ansible_ssh_user }}/external-services/{{ item.key }}/stop_external_services.sh"
+  register: stop_external_services_script
+
+- name: Stop Comms Channel External Services
+  shell: "bash /home/{{ ansible_ssh_user }}/external-services/{{ item.key }}/stop_external_services.sh"
+  when: stop_external_services_script.stat.exists
+
+- name: Remove Comms Channel External Services Scripts
+  file:
+    path: "/home/{{ ansible_ssh_user }}/external-services/{{ item.key }}"
+    state: absent

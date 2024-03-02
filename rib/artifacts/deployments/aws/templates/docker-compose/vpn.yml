@@ -1,0 +1,45 @@
+dnsproxy:
+  image: defreitas/dns-proxy-server:latest
+  hostname: dnsproxy
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  networks:
+    rib-overlay-network:
+      ipv4_address: 10.11.0.250
+  volumes:
+    # - /etc/resolv.conf:/etc/resolv.conf
+    - /var/run/docker.sock:/var/run/docker.sock
+    - /data/dnsproxy/config.json:/app/conf/config.json 
+  deploy:
+    labels:
+      dps.network: rib-overlay-network
+    placement:
+      constraints:
+        - "node.role==manager"
+
+openvpn:
+  image: ixdotai/openvpn:0.2.3
+  hostname: openvpn
+  networks:
+    rib-overlay-network:
+      ipv4_address: 10.11.0.251
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  volumes:
+    - /data/vpn/config:/etc/openvpn 
+    # - /etc/resolv.conf:/etc/resolv.conf
+  ports:
+    - "1194:1194"
+    - "1194:1194/udp"
+  cap_add:
+    - NET_ADMIN
+  sysctls:
+    - net.ipv6.conf.all.forwarding=1
+    - net.ipv6.conf.default.forwarding=1
+    - net.ipv6.conf.all.disable_ipv6=0
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"

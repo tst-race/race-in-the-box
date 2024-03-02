@@ -1,0 +1,15 @@
+{
+  "create_command": "rib env aws create  --name=incompatible-env --ssh-key-name=race-kyle_treubig --linux-client-count=2 --linux-server-count=2 --colocate-clients-and-servers --race=2.0.0 --network-manager-kit=PluginNMTwoSixStub:develop:dev --comms-channel=twoSixDirectCpp:develop:dev --comms-channel=twoSixIndirectCpp:develop:dev --artifact-manager-kit=PluginArtifactManagerTwoSixCpp:develop:dev --linux-client-image=ghcr.io/tst-race/race-images/race-runtime-linux:main --linux-server-image=ghcr.io/tst-race/race-images/race-runtime-linux:main --strategy=node-resources-requirements --android-arch=x86 --ram-per-android-client=4096 --ram-per-linux-client=4096 --ram-per-linux-server=4096 --cpus-per-android-client=1.0 --cpus-per-linux-client=1.0 --cpus-per-linux-server=1.0 --gpus-per-linux-client=1.0 --gpus-per-linux-server=1.0 --android-arm-instance-type=c6g.metal --android-x86-instance-type=c5.metal --linux-node-instance-type=t3a.2xlarge --linux-gpu-node-instance-type=p3.2xlarge --service-instance-type=t3a.2xlarge -V -V",
+  "create_date": "2021-12-06 21:03:49",
+  "last_create_aws_resources_command": "rib env aws up  --name=incompatible-env --timeout=600 -V -V",
+  "last_create_aws_resources_time": "Wed, 08 Dec 2021 13:42:08",
+  "last_delete_aws_resources_command": "rib env aws dar  --name=incompatible-env --timeout=600 -V -V",
+  "last_delete_aws_resources_time": "Wed, 08 Dec 2021 17:50:42",
+  "last_provision_command": "rib env aws up  --name=incompatible-env --timeout=600 -V -V",
+  "last_provision_time": "Wed, 08 Dec 2021 13:53:15",
+  "last_unprovision_command": "rib env aws unprovision  --name=incompatible-env --timeout=600 -V -V",
+  "last_unprovision_time": "Wed, 08 Dec 2021 17:40:38",
+  "name": "incompatible-env",
+  "rib_version": "dev",
+  "up_count": 0
+}

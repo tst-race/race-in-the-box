@@ -1,0 +1,19 @@
+{
+    "bandwidth": "-1",
+    "latency": "-1",
+    "debug": "false",
+    "android_python_path": "/data/data/com.twosix.race/python3.7/:/data/data/com.twosix.race/python3.7/encodings/:/data/data/com.twosix.race/python3.7/lib-dynload/:/data/data/com.twosix.race/race/python/:/data/data/com.twosix.race/race/artifacts/network-manager/:data/data/com.twosix.race/race/artifacts/comms/:data/data/com.twosix.race/python3.7/ordered-set-4.0.2:data/data/com.twosix.race/python3.7/jaeger-client-4.3.0:data/data/com.twosix.race/python3.7/pycryptodome-3.15.0:/data/data/com.twosix.race/python3.7/simplejson-3.16.0:/data/data/com.twosix.race/python3.7/PyYAML-5.3.1:/data/data/com.twosix.race/python3.7/opentracing-2.4.0:/data/data/com.twosix.race/python3.7/thrift-0.13.0:/data/data/com.twosix.race/python3.7/tornado-6.1",
+    "level": "DEBUG",
+    "log-race-config": "true",
+    "log-comms-config": "false",
+    "log-network-manager-config": "false",
+    "msg-log-length": "256",
+    "environment_tags": {
+        "any": [],
+        "phone": ["user"],
+        "user": ["user", "linux"],
+        "home": ["service", "user", "linux", "gaming"],
+        "service": ["service", "user", "linux"],
+        "dmz": ["service", "linux"]
+    }
+}

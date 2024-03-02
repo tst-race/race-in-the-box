@@ -1,0 +1,22 @@
+---
+
+- name: "Extract {{ artifact_type }} Mount Artifacts"
+  block:
+    - name: "Check if {{ artifact_type }} mount artifacts exist"
+      stat:
+        path: "/data/mounted-artifacts/{{ artifact_type }}.tar.gz"
+      register: mount_artifacts_stat
+
+    - name: "Ensure {{ artifact_type }} artifacts directory exists"
+      file:
+        path: "/race/{{ artifact_type }}"
+        state: directory
+
+    - name: "Extract {{ artifact_type }} mount artifacts"
+      unarchive:
+        src: "/data/mounted-artifacts/{{ artifact_type }}.tar.gz"
+        remote_src: true
+        dest: "/race/{{ artifact_type }}"
+      when: mount_artifacts_stat.stat.exists == true
+
+  become: true

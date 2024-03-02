@@ -1,0 +1,16 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - dockerRegistry is defined
+      - dockerToken is defined
+      - dockerUsername is defined
+  check_mode: true
+
+- name: Login to Docker Registry
+  docker_login:
+    registry: "{{ dockerRegistry }}"
+    password: "{{ dockerToken }}"
+    username: "{{ dockerUsername }}"
+  when: (dockerUsername | length > 0) and (dockerToken | length > 0)

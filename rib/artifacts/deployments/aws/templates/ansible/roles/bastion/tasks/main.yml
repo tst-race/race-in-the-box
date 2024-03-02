@@ -1,0 +1,13 @@
+---
+
+- include_role:
+    name: docker-stack
+  vars:
+    stack: bastion
+
+- name: Wait For SSH
+  local_action:
+    module: wait_for
+    host: "{{ inventory_hostname }}"
+    port: 22
+    state: started

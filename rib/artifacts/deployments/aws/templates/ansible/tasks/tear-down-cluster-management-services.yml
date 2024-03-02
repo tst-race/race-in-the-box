@@ -1,0 +1,16 @@
+---
+
+- name: Remove opentracing Stack
+  docker_stack:
+    name: opentracing
+    state: absent
+    
+- name: Remove bastion Stack
+  docker_stack:
+    name: bastion
+    state: absent
+
+- name: Remove Docker Compose Files
+  file:
+    path: "/home/{{ ansible_ssh_user }}/docker-compose"
+    state: absent

@@ -1,0 +1,30 @@
+{node_name}: # race container with app and plugins installed
+  image: {image}
+  hostname: {node_name}
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  {optional_depends_on}
+  networks:
+    - rib-overlay-network
+  ports:
+    - {external_vnc_port}:{internal_vnc_port}
+  ulimits:
+    nofile:
+      soft: 4096
+      hard: 4096
+  environment:
+    ES_SERVER_URLS: http://elasticsearch:9200
+    RACE_PERSONA: {node_name}
+    RACE_NODE_TYPE: {node_type}
+    REPORTER_GRPC_HOST_PORT: localhost:14250
+    SPAN_STORAGE_TYPE: elasticsearch
+    HW_ACCEL: 'on'
+    RACE_ENCRYPTION_TYPE: {race_encryption_type}
+    CUTTLEFISH_INSTANCE: {instance_num}
+    STARTUP_DELAY: {startup_delay}
+  working_dir: /code/
+  privileged: {privileged}
+  devices:
+    - /dev/kvm:/dev/kvm
+  volumes: []

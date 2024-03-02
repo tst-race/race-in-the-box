@@ -1,0 +1,18 @@
+rib-bastion: # bastion container for performers to ssh into and interact with other nodes
+  hostname: rib-bastion
+  image: {image}
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  ports:
+    - "22:22" # Need quotes because yml would interpret this as a base60 value.
+  working_dir: /code/
+  volumes:
+    - /data:/data
+    - /home/{remote_username}/.ssh/authorized_keys:/home/rib/.ssh/authorized_keys

@@ -1,0 +1,11 @@
+networks:
+  outside:
+    ipam:
+      config:
+      - subnet: 172.25.1.0/24
+    name: rib-overlay-network
+    # For local mode, the "overlay" network will be a bridge network. This is called
+    # rib-overlay-network for AWS mode to make sure all plugins can use one
+    # standard name for all compose-scripts. This should not impact anything outside
+    # of docker and should be transparent to everyone using rib
+    driver: bridge

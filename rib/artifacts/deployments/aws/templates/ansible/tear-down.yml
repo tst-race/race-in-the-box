@@ -1,0 +1,70 @@
+###
+# Playbook to tear down a RACE deployment on an AWS environment
+###
+
+---
+
+- hosts: localhost
+  tasks:
+    - name: Assert That Required Variables Are Defined
+      assert:
+        that:
+          - externalServices is defined
+      check_mode: true
+
+###
+# Play to Tear Down On RACE Node Hosts
+###
+
+- name: Tear Down On RACE Node Hosts
+  hosts: node_host
+  gather_facts: no
+  tasks:
+    - include_tasks: tasks/tear-down-race-nodes.yml
+
+###
+# Play to Tear Down on Service Host
+###
+
+- name: Tear Down On Service Host
+  hosts: service_host
+  gather_facts: no
+  tasks:
+    - include_tasks: tasks/tear-down-external-services.yml
+      loop: "{{ externalServices | dict2items }}"
+
+###
+# Play to Tear Down on Cluster Manager
+###
+
+- name: Gather Cluster Worker Facts
+  hosts: cluster_worker
+  gather_facts: yes
+
+- name: Tear Down On Cluster Manager
+  hosts: cluster_manager
+  gather_facts: no
+  tasks:
+    - include_tasks: tasks/tear-down-vpn.yml
+    - include_tasks: tasks/tear-down-orchestration.yml
+    - include_tasks: tasks/tear-down-cluster-management-services.yml
+    - include_tasks: tasks/tear-down-race-data.yml
+    - include_tasks: tasks/tear-down-overlay-network.yml
+
+###
+# Play to Purge Docker Images
+###
+
+- hosts: all
+  gather_facts: no
+  tasks:
+    - name: Prune Docker
+      docker_prune:
+        builder_cache: yes
+        containers: yes
+        images: yes
+        images_filters:
+          dangling: false
+        networks: yes
+        volumes: yes
+      when: purgeAllData

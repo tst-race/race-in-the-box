@@ -1,0 +1,69 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - dockerComposeDir is defined
+      - deploymentName is defined
+  check_mode: true
+
+- name: Ensure Docker Compose Directory Exists
+  file:
+    path: "/home/{{ ansible_ssh_user }}/docker-compose"
+    state: directory
+
+- name: Start Android ARM RACE Nodes
+  import_tasks: start-race-nodes.yml
+  vars:
+    race_hosts: "{{ groups.android_arm64_node_host | sort }}"
+    race_host_type: "android-arm64"
+    mount_artifacts:
+      - "android-arm64-v8a"
+      - "linux-arm64-v8a"
+  when: "'android_arm64_node_host' in groups and inventory_hostname in groups.android_arm64_node_host"
+
+- name: Start Android x86 RACE Nodes
+  import_tasks: start-race-nodes.yml
+  vars:
+    race_hosts: "{{ groups.android_x86_64_node_host | sort }}"
+    race_host_type: "android-x86_64"
+    mount_artifacts:
+      - "android-x86_64"
+      - "linux-x86_64"
+  when: "'android_x86_64_node_host' in groups and inventory_hostname in groups.android_x86_64_node_host"
+
+- name: Start Linux GPU ARM RACE Nodes
+  import_tasks: start-race-nodes.yml
+  vars:
+    race_hosts: "{{ groups.linux_gpu_arm64_node_host | sort }}"
+    race_host_type: "linux-gpu-arm64"
+    mount_artifacts:
+      - "linux-arm64-v8a"
+  when: "'linux_gpu_arm64_node_host' in groups and inventory_hostname in groups.linux_gpu_arm64_node_host"
+
+- name: Start Linux GPU x86 RACE Nodes
+  import_tasks: start-race-nodes.yml
+  vars:
+    race_hosts: "{{ groups.linux_gpu_x86_64_node_host | sort }}"
+    race_host_type: "linux-gpu-x86_64"
+    mount_artifacts:
+      - "linux-x86_64"
+  when: "'linux_gpu_x86_64_node_host' in groups and inventory_hostname in groups.linux_gpu_x86_64_node_host"
+
+- name: Start Linux ARM RACE Nodes
+  import_tasks: start-race-nodes.yml
+  vars:
+    race_hosts: "{{ groups.linux_arm64_node_host | sort }}"
+    race_host_type: "linux-arm64"
+    mount_artifacts:
+      - "linux-arm64-v8a"
+  when: "'linux_arm64_node_host' in groups and inventory_hostname in groups.linux_arm64_node_host"
+
+- name: Start Linux x86 RACE Nodes
+  import_tasks: start-race-nodes.yml
+  vars:
+    race_hosts: "{{ groups.linux_x86_64_node_host | sort }}"
+    race_host_type: "linux-x86_64"
+    mount_artifacts:
+      - "linux-x86_64"
+  when: "'linux_x86_64_node_host' in groups and inventory_hostname in groups.linux_x86_64_node_host"

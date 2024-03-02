@@ -1,0 +1,36 @@
+---
+
+- name: Remove Plugin Runtime Scripts
+  file:
+    path: /data/runtime-scripts
+    state: absent
+
+- name: Remove Distribution Artifacts
+  file:
+    path: /data/dist
+    state: absent
+
+- name: Remove Mounted Artifacts
+  file:
+    path: /data/mounted-artifacts
+    state: absent
+
+- name: Remove Etc Files
+  file:
+    path: /data/etc
+    state: absent
+
+- name: Remove Config Files
+  file:
+    path: /data/configs
+    state: absent
+
+- name: Remove VPN Files
+  file:
+    path: /data/vpn
+    state: absent
+
+- name: Remove DNS Proxy Files
+  file:
+    path: /data/dnsproxy
+    state: absent

@@ -1,0 +1,36 @@
+---
+
+# We have to bootstrap the swarm overlay network on all host instances here from the cluster manager
+# (i.e., the swarm manager) since we run external services and RACE nodes using docker-compose
+# commands rather than as deployed swarm stacks. It doesn't matter what image we deploy via swarm,
+# as long as we deploy _something_ using the rib-overlay-network, so we deploy the hello-world
+# image as a swarm stack to each swarm worker instance, because that is one of the smallest docker
+# images that exist.
+#
+# If we didn't do this, we would get errors when we perform a `docker-compose up` with projects
+# referencing the rib-overlay-network as it would not exist (and they would be unable to create it).
+
+- name: Remove Network Bootstrap Service
+  docker_swarm_service:
+    name: "overlay-network-bootstrap-{{ hostvars[item].ansible_hostname }}"
+    state: absent
+  loop: "{{ groups['cluster_worker'] }}"
+  retries: 3
+  delay: 3
+  register: result
+  until: result is not failed
+
+- name: Run Network Bootstrap Service
+  docker_swarm_service:
+    name: "overlay-network-bootstrap-{{ hostvars[item].ansible_hostname }}"
+    state: present
+    image: alpine
+    command: sleep infinity
+    networks:
+      - rib-overlay-network
+    placement:
+      constraints:
+        - "node.hostname=={{ hostvars[item].ansible_fqdn }}"
+    restart_config:
+      condition: none
+  loop: "{{ groups['cluster_worker'] }}"

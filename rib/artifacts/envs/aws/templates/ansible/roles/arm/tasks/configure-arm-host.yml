@@ -1,0 +1,44 @@
+---
+
+# These tasks configure ARM hosts to run the cuttlefish Android emulator (in or out of docker
+# containers).
+#
+# Cuttlefish comes with x86_64 binaries, even though the emulated device is ARM. So we install and
+# configure qemu to run x86_64 binaries on the ARM host.
+#
+# The vhost kernel modules need to be enabled in order for cuttlefish to use KVM to create new
+# virtual machines.
+
+- name: Configure ARM Host
+  block:
+    - name: Install qemu for ARM/x86 support
+      yum:
+        name: "{{ packages }}"
+        state: present
+        update_cache: true
+      vars:
+        packages:
+          - qemu-user-static
+
+    # Based on https://github.com/qemu/qemu/blob/master/scripts/qemu-binfmt-conf.sh
+    # Enables qemu-x86_64-static as interpreter for x86_64 binaries on ARM
+    - name: Register qemu Interpreter
+      shell:
+        cmd: "echo ':qemu-{{ cpu }}:M::{{ magic }}:{{ mask }}:{{ interpreter }}:{{ flags }}' > /proc/sys/fs/binfmt_misc/register"
+        creates: /proc/sys/fs/binfmt_misc/qemu-x86_64
+      vars:
+        cpu: "x86_64"
+        magic: "\\x7fELF\\x02\\x01\\x01\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x00\\x02\\x00\\x3e\\x00"
+        mask: "\\xff\\xff\\xff\\xff\\xff\\xfe\\xfe\\x00\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\xff\\xfe\\xff\\xff\\xff"
+        interpreter: "/usr/bin/qemu-x86_64"
+        flags: ""
+
+    - name: Add vhost Kernel Modules
+      modprobe:
+        name: "{{ item }}"
+        state: present
+      loop:
+        - vhost_vsock
+        - vhost_net
+
+  become: true

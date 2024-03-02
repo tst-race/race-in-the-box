@@ -1,0 +1,30 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - externalServices is defined
+  check_mode: true
+
+- name: Ensure External Services Directory Exists
+  file:
+    path: "/home/{{ ansible_ssh_user }}/external-services"
+    state: directory
+
+- name: Copy Comms Channel External Services Scripts
+  copy:
+    src: "{{ item.value }}/"
+    dest: "/home/{{ ansible_ssh_user }}/external-services/{{ item.key }}/"
+  loop: "{{ externalServices | dict2items }}"
+
+- name: Start Comms Channel External Services
+  shell: "bash /home/{{ ansible_ssh_user }}/external-services/{{ item.key }}/start_external_services.sh"
+  loop: "{{ externalServices | dict2items }}"
+
+- name: Status Comms Channel External Services
+  shell: "bash /home/{{ ansible_ssh_user }}/external-services/{{ item.key }}/get_status_of_external_services.sh"
+  register: result
+  until: result is not failed
+  retries: 10
+  delay: 10
+  loop: "{{ externalServices | dict2items }}"

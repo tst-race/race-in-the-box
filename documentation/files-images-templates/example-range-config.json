@@ -1,0 +1,160 @@
+{
+  "range": {
+    "RACE_nodes": [
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-client-00001",
+        "nat": false,
+        "platform": "linux",
+        "type": "client"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-client-00002",
+        "nat": false,
+        "platform": "linux",
+        "type": "client"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-client-00003",
+        "nat": false,
+        "platform": "linux",
+        "type": "client"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-client-00004",
+        "nat": false,
+        "platform": "linux",
+        "type": "client"
+      },
+      {
+        "architecture": "auto",
+        "bridge": true,
+        "enclave": "global",
+        "environment": "phone",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-client-00005",
+        "nat": false,
+        "platform": "android",
+        "type": "client",
+        "uiEnabled": false
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-server-00001",
+        "nat": false,
+        "platform": "linux",
+        "type": "server"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-server-00002",
+        "nat": false,
+        "platform": "linux",
+        "type": "server"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-server-00003",
+        "nat": false,
+        "platform": "linux",
+        "type": "server"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-server-00004",
+        "nat": false,
+        "platform": "linux",
+        "type": "server"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-server-00005",
+        "nat": false,
+        "platform": "linux",
+        "type": "server"
+      },
+      {
+        "architecture": "x86_64",
+        "bridge": false,
+        "enclave": "global",
+        "environment": "any",
+        "genesis": true,
+        "gpu": false,
+        "identities": [],
+        "name": "race-server-00006",
+        "nat": false,
+        "platform": "linux",
+        "type": "server"
+      }
+    ],
+    "bastion": {},
+    "enclaves": [
+      {
+        "ip": "localhost",
+        "name": "global",
+        "port_mapping": {}
+      }
+    ],
+    "name": "basic",
+    "services": []
+  }
+}

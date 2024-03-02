@@ -1,0 +1,24 @@
+---
+
+- name: "Create {{ clusterRole }} EC2 Autoscale CloudFormation Stack"
+  cloudformation:
+    stack_name: "race-{{ awsEnvName }}-{{ clusterRole }}"
+    state: "present"
+    region: "{{ awsRegion }}"
+    on_create_failure: "DELETE"
+    template: "roles/cloudformation/files/ec2-autoscale.yml"
+    template_parameters:
+      AmazonInstanceType: "{{ amazonInstanceType }}"
+      AmazonLinuxAMIID: "{{ amazonLinuxAMIID }}"
+      AwsEnvName: "{{ awsEnvName }}"
+      ClusterRole: "{{ clusterRole }}"
+      NumInstances: "{{ numInstances }}"
+      EbsSize: "{{ ebsSize }}"
+      SshKeyName: "{{ sshKeyName }}"
+      RemoteUsername: "{{ remoteUsername }}"
+    tags:
+      AwsEnvName: "{{ awsEnvName }}"
+      AwsEnvOwner: "{{ awsEnvOwner }}"
+      Stack: "race-{{ awsEnvName }}-{{ clusterRole }}"
+      Creator: "rib"
+      race_cost_service: "RiB AWS Env"

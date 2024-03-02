@@ -1,0 +1,39 @@
+version: '3.7'
+
+###
+# Global Settings
+###
+
+x-logging:
+  driver: json-file
+  options:
+    max-file: '5'
+    max-size: 1m
+
+###
+# Networks
+###
+
+
+# Creates a link to the external RiB/RACE network called net_pixel. This is the
+# network that all nodes are run on.
+networks:
+  net_pixel:
+    external: true
+
+###
+# Services
+###
+
+services:
+
+  # Will spin up race-suppl-service-a, which now has connectivity to all RACE servers and
+  # RACE clients. Sub this block out with whatever service you want. The key is to
+  # make sure the same `networks` block here exists
+  race-suppl-service-a:
+    image: ghcr.io/tst-race/race-images/race-runtime-linux:1.0.0
+    container_name: race-suppl-service-a
+    hostname: race-suppl-service-a
+    networks:
+      - net_pixel
+

@@ -1,0 +1,61 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - dataEtcDir is defined
+      - distArtifactsDir is defined
+      - mountArtifactsDir is defined
+      - pluginConfigDirs is defined
+      - pluginRuntimeScripts is defined
+      - distVpnDir is defined
+      - distDnsProxyDir is defined
+  check_mode: true
+
+- name: Copy Etc Files
+  ansible.posix.synchronize:
+    src: "{{ dataEtcDir }}"
+    dest: /data/
+
+- name: Copy Distribution Artifact Files
+  ansible.posix.synchronize:
+    src: "{{ distArtifactsDir }}"
+    dest: /data/
+
+- name: Copy Mounted Artifact Files
+  ansible.posix.synchronize:
+    src: "{{ mountArtifactsDir }}"
+    dest: /data/
+
+- name: Ensure Configs Directory Exists
+  file:
+    path: "/data/configs"
+    state: directory
+
+- name: Copy Plugin Config Files
+  ansible.posix.synchronize:
+    src: "{{ item.value }}"
+    dest: "/data/configs/"
+  loop: "{{ pluginConfigDirs | dict2items }}"
+
+- name: Ensure Runtime Scripts Directory Exists
+  file:
+    path: "/data/runtime-scripts"
+    state: directory
+
+- name: Copy Plugin Runtime Scripts
+  ansible.posix.synchronize:
+    src: "{{ item.value }}/"
+    dest: "/data/runtime-scripts/{{ item.key }}/"
+  loop: "{{ pluginRuntimeScripts | dict2items }}"
+
+- name: Copy VPN Files
+  ansible.posix.synchronize:
+    src: "{{ distVpnDir }}"
+    dest: /data/
+
+- name: Copy DNS Proxy Files
+  ansible.posix.synchronize:
+    src: "{{ distDnsProxyDir }}"
+    dest: /data/
+

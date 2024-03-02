@@ -1,0 +1,13 @@
+{
+    "rib_image": {
+        "digest": "rib-image-digest",
+        "created": "rib-image-created"
+    },
+    "create_command": "create-command --name=compatible-env ",
+    "create_date": "create-date",
+    "last_provision_command": null,
+    "last_provision_time": null,
+    "last_used_amis": null,
+    "last_unprovision_command": null,
+    "last_unprovision_time": null
+}

@@ -1,0 +1,11 @@
+---
+
+- name: Remove Network Bootstrap Service
+  docker_swarm_service:
+    name: "overlay-network-bootstrap-{{ hostvars[item].ansible_hostname }}"
+    state: absent
+  loop: "{{ groups['cluster_worker'] }}"
+  retries: 3
+  delay: 3
+  register: result
+  until: result is not failed

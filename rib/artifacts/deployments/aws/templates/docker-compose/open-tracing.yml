@@ -1,0 +1,113 @@
+elasticsearch:
+  image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+  hostname: elasticsearch
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  ports:
+    - "9200:9200"
+  environment:
+    - bootstrap.memory_lock=true
+    - cluster.initial_master_nodes=elasticsearch
+    - cluster.name=es-docker-cluster
+    - ES_JAVA_OPTS=-Xms512m -Xmx512m
+    - node.name=elasticsearch
+    - transport.host=localhost
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+  healthcheck:
+    test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+    interval: 5s
+    retries: 30
+    timeout: 20s
+
+kibana:
+  image: docker.elastic.co/kibana/kibana:7.16.1
+  hostname: kibana
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  ports:
+    - "5601:5601"
+  environment:
+    ELASTICSEARCH_URL: http://elasticsearch:9200
+    ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+  depends_on: 
+    - elasticsearch
+  healthcheck:
+    test: ["CMD-SHELL", "curl --silent --fail --insecure http://localhost:5601 || exit 1"]
+    interval: 5s
+    timeout: 10s
+    retries: 30
+
+jaeger-query:
+  image: jaegertracing/jaeger-query:1.34.1
+  hostname: jaeger-query
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  ports:
+    - "16686:16686"
+  environment:
+    - SPAN_STORAGE_TYPE=elasticsearch
+    - ES_SERVER_URLS=http://elasticsearch:9200
+    - QUERY_MAX_CLOCK_SKEW_ADJUSTMENT=0
+  restart: on-failure
+  depends_on: 
+    - elasticsearch
+
+jaeger-collector:
+  image: jaegertracing/jaeger-collector:1.34.1
+  hostname: jaeger-collector
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  environment:
+  - SPAN_STORAGE_TYPE=elasticsearch
+  - ES_SERVER_URLS=http://elasticsearch:9200
+  - COLLECTOR_TAGS=range-name=${{DEPLOYMENT_NAME}}
+  restart: on-failure
+  depends_on:
+    - elasticsearch
+
+graph_renderer:
+  image: ghcr.io/tst-race/race-in-the-box/graph_renderer:main
+  hostname: renderer
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: aws
+  deploy:
+    placement:
+      constraints:
+        - "node.role==manager"
+  networks:
+    - rib-overlay-network
+  ports:
+    - "6080:6080"
+  restart: on-failure

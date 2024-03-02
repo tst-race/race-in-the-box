@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: EFS Stack for RACE
+
+###########
+# Parameters
+###########
+
+Parameters:
+
+  ###########
+  # AWS Env Name
+  ###########
+
+  AwsEnvName:
+    Type: String
+    Description: Name of the AWS Env in RACE, used for all created resources
+
+###########
+# Resources
+###########
+
+Resources:
+
+  ###########
+  # File Systems
+  ###########
+
+  DataFileSystem:
+    Type: AWS::EFS::FileSystem
+    Properties:
+      PerformanceMode: maxIO
+      FileSystemTags:
+      - Key: Name
+        Value: !Sub "race-${AwsEnvName}-DataFileSystem"
+      - Key: race_cost_service
+        Value: "RiB AWS Env"
+
+  ###########
+  # Mount Targets
+  ###########
+
+  DataMountTarget:
+    Type: AWS::EFS::MountTarget
+    Properties:
+      FileSystemId: !Ref DataFileSystem
+      SubnetId:
+        Fn::ImportValue: !Sub "race-${AwsEnvName}-PublicSubnetId"
+      SecurityGroups:
+        - Fn::ImportValue: !Sub "race-${AwsEnvName}-PrivateGlobalAccessSecurityGroupId"
+
+###########
+# Outputs
+###########
+
+Outputs:
+
+  ### Mount IDs
+
+  DataFileSystemId:
+    Description: DataFileSystemId
+    Value: !Ref DataFileSystem
+    Export:
+      Name: !Sub "race-${AwsEnvName}-DataFileSystemId"

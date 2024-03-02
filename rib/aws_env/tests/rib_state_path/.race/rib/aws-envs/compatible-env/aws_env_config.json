@@ -1,0 +1,53 @@
+{
+    "name": "compatible-env",
+    "rib_version": "test-rib-version",
+    "ssh_key_name": "test-ssh-key-pair",
+    "remote_username": "test-user",
+    "region": "test-region",
+    "cluster_manager": {
+        "instance_type": "test-instance-type",
+        "instance_ami": "test-linux-x86-ami",
+        "ebs_size": 64
+    },
+    "service_host": {
+        "instance_type": "test-instance-type",
+        "instance_ami": "test-linux-x86-ami",
+        "ebs_size": 64
+    },
+    "linux_arm64_hosts": {
+        "instance_type": "test-linux-arm64-instance-type",
+        "instance_ami": "test-linux-arm-ami",
+        "instance_count": 0,
+        "ebs_size": 64
+    },
+    "linux_x86_64_hosts": {
+        "instance_type": "test-linux-x86_64-instance-type",
+        "instance_ami": "test-linux-x86-ami",
+        "instance_count": 1,
+        "ebs_size": 64
+    },
+    "linux_gpu_arm64_hosts": {
+        "instance_type": "test-linux-gpu-arm64-instance-type",
+        "instance_ami": "test-gpu-arm-ami",
+        "instance_count": 0,
+        "ebs_size": 128
+    },
+    "linux_gpu_x86_64_hosts": {
+        "instance_type": "test-linux-gpu-x86_64-instance-type",
+        "instance_ami": "test-gpu-x86-ami",
+        "instance_count": 0,
+        "ebs_size": 128
+    },
+    "android_arm64_hosts": {
+        "instance_type": "test-android-arm64-instance-type",
+        "instance_ami": "test-linux-arm-ami",
+        "instance_count": 0,
+        "ebs_size": 128
+    },
+    "android_x86_64_hosts": {
+        "instance_type": "test-android-x86_64-instance-type",
+        "instance_ami": "test-linux-x86-ami",
+        "instance_count": 0,
+        "ebs_size": 128
+    }
+}

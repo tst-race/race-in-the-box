@@ -1,0 +1,102 @@
+elasticsearch:
+  image: docker.elastic.co/elasticsearch/elasticsearch:7.16.1
+  container_name: elasticsearch
+  hostname: elasticsearch
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  networks:
+    - outside
+  environment:
+  - node.name=elasticsearch
+  - cluster.name=es-docker-cluster
+  - cluster.initial_master_nodes=elasticsearch
+  - bootstrap.memory_lock=true
+  - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+  - transport.host=localhost
+  ulimits:
+    memlock:
+      soft: -1
+      hard: -1
+  volumes:
+  - ${{HOST_RIB_STATE_PATH}}/deployments/local/${{DEPLOYMENT_NAME}}/logs/opentracing/elasticsearch:/usr/share/elasticsearch/data
+  ports:
+  - 9200:9200
+  healthcheck:
+    test: ["CMD-SHELL", "curl --silent --fail localhost:9200/_cluster/health || exit 1"]
+    interval: 5s
+    retries: 30
+    timeout: 20s
+
+kibana:
+  image: docker.elastic.co/kibana/kibana:7.16.1
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  container_name: kibana
+  ports:
+    - 5601:5601
+  environment:
+    ELASTICSEARCH_URL: http://elasticsearch:9200
+    ELASTICSEARCH_HOSTS: '["http://elasticsearch:9200"]'
+  networks:
+    - outside
+  depends_on: 
+    elasticsearch:
+      condition: service_healthy
+  healthcheck:
+    test: ["CMD-SHELL", "curl --silent --fail --insecure http://localhost:5601 || exit 1"]
+    interval: 5s
+    timeout: 10s
+    retries: 30
+
+jaeger-query:
+  container_name: jaeger-query
+  hostname: jaeger-query
+  image: jaegertracing/jaeger-query:1.34.1
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  networks:
+    - outside
+  ports:
+  - "16686:16686"
+  - "16687:16686"
+  environment:
+  - SPAN_STORAGE_TYPE=elasticsearch
+  - ES_SERVER_URLS=http://elasticsearch:9200
+  - QUERY_MAX_CLOCK_SKEW_ADJUSTMENT=0
+  restart: on-failure
+  depends_on: 
+    elasticsearch:
+      condition: service_healthy
+
+jaeger-collector:
+  container_name: jaeger-collector
+  hostname: jaeger-collector
+  image: jaegertracing/jaeger-collector:1.34.1
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  networks:
+    - outside
+  environment:
+  - SPAN_STORAGE_TYPE=elasticsearch
+  - ES_SERVER_URLS=http://elasticsearch:9200
+  - COLLECTOR_TAGS=range-name=${{DEPLOYMENT_NAME}}
+  restart: on-failure
+  depends_on:
+    elasticsearch:
+      condition: service_healthy
+
+graph_renderer:
+  container_name: graph_renderer
+  image: ghcr.io/tst-race/race-in-the-box/graph_renderer:main
+  hostname: graph_renderer
+  labels:
+    race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
+    race.rib.deployment-type: local
+  networks:
+    - outside
+  ports:
+    - "6080:6080"

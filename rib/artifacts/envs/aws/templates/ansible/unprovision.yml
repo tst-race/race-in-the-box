@@ -1,0 +1,93 @@
+###
+# Playbook to unprovision a RACE AWS environment
+###
+
+---
+
+###
+# Play to Delete Cloudformation Stacks for RACE
+###
+
+- name: Delete Cloudformation Stacks for RACE
+  hosts: localhost
+  gather_facts: no
+
+  ###
+  # Variables for Play
+  ###
+
+  vars:
+    stackDeleteTimeout: 600
+
+  ###
+  # Tasks
+  ###
+
+  tasks:
+
+    - name: Assert That Required Variables Are Defined
+      assert:
+        that:
+          - awsEnvName is defined
+          - awsRegion is defined
+
+    # Important: stacks are deleted in the reverse order in which they were created
+    - name: Delete GPU x86 EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-linux-gpu-x86-64-node-host"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete GPU ARM EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-linux-gpu-arm64-node-host"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete Android x86 EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-android-x86-64-node-host"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete Android ARM EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-android-arm64-node-host"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete Linux x86 EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-linux-x86-64-node-host"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete Linux ARM EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-linux-arm64-node-host"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete Service EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-service-host"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete Manager EC2 RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-cluster-manager"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete EFS RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-efs"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"
+
+    - name: Delete Network RACE Cloudformation Stack
+      cloudformation:
+        stack_name: "race-{{ awsEnvName }}-network"
+        state: "absent"
+      timeout: "{{ stackDeleteTimeout }}"

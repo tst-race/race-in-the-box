@@ -1,0 +1,34 @@
+###
+# Playbook to stand up a RACE deployment on an AWS environment
+###
+
+---
+
+- hosts: all
+  roles:
+    - docker-login
+
+- hosts: cluster_manager
+  gather_facts: no
+  roles:
+    - race-data
+    - overlay-network
+    - bastion
+    - vpn
+    - opentracing
+    - orchestration-services
+
+- hosts: service_host
+  gather_facts: no
+  roles:
+    - external-services
+
+- hosts: node_host
+  gather_facts: no
+  roles:
+    - race-nodes
+
+- hosts: all
+  gather_facts: no
+  roles:
+    - remove-secrets

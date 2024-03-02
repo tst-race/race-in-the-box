@@ -1,0 +1,56 @@
+---
+
+- name: Set Service Host Label
+  docker_node:
+    hostname: "{{ hostvars[item].ansible_fqdn }}"
+    labels:
+      cluster_role: service-host
+  loop: "{{ groups['service_host'] }}"
+
+- name: Set Android ARM Node Host Label
+  docker_node:
+    hostname: "{{ hostvars[item].ansible_fqdn }}"
+    labels:
+      cluster_role: android-arm64-node-host
+  loop: "{{ groups['android_arm64_node_host'] }}"
+  when: "'android_arm64_node_host' in groups"
+
+- name: Set Android x86 Node Host Label
+  docker_node:
+    hostname: "{{ hostvars[item].ansible_fqdn }}"
+    labels:
+      cluster_role: android-x86-64-node-host
+  loop: "{{ groups['android_x86_64_node_host'] }}"
+  when: "'android_x86_64_node_host' in groups"
+
+- name: Set GPU ARM Node Host Label
+  docker_node:
+    hostname: "{{ hostvars[item].ansible_fqdn }}"
+    labels:
+      cluster_role: linux-gpu-arm64-node-host
+  loop: "{{ groups['linux_gpu_arm64_node_host'] }}"
+  when: "'linux_gpu_arm64_node_host' in groups"
+
+- name: Set GPU x86 Node Host Label
+  docker_node:
+    hostname: "{{ hostvars[item].ansible_fqdn }}"
+    labels:
+      cluster_role: linux-gpu-x86-64-node-host
+  loop: "{{ groups['linux_gpu_x86_64_node_host'] }}"
+  when: "'linux_gpu_x86_64_node_host' in groups"
+
+- name: Set Linux ARM Node Host Label
+  docker_node:
+    hostname: "{{ hostvars[item].ansible_fqdn }}"
+    labels:
+      cluster_role: linux-arm64-node-host
+  loop: "{{ groups['linux_arm64_node_host'] }}"
+  when: "'linux_arm64_node_host' in groups"
+
+- name: Set Linux x86 Node Host Label
+  docker_node:
+    hostname: "{{ hostvars[item].ansible_fqdn }}"
+    labels:
+      cluster_role: linux-x86-64-node-host
+  loop: "{{ groups['linux_x86_64_node_host'] }}"
+  when: "'linux_x86_64_node_host' in groups"

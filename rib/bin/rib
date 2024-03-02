@@ -1,0 +1,24 @@
+#!/usr/bin/env python3
+"""
+    Purpose:
+        Entrypoint for Race in the Box. Command line tool for running and integrating
+        The RACE system.
+
+    Function Call:
+        rib COMMAND_GROUP COMMAND [ARGS]...
+
+    Example Call:
+        rib --help
+"""
+
+# Import the entrypoint script
+from rib.cli import cli
+
+
+###
+# Script Main Execution
+###
+
+
+if __name__ == "__main__":
+    cli.execute_race_in_the_box_cli()

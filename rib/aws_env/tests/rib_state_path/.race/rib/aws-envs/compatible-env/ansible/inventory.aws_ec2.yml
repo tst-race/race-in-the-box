@@ -1,0 +1,13 @@
+compose:
+  ansible_port: 2222
+filters:
+  tag:AwsEnvName: compatible-env
+groups:
+  cluster_worker: tags.get('ClusterRole') != 'cluster-manager'
+  node_host: tags.get('ClusterRole') in ['android-node-host', 'gpu-node-host', 'linux-node-host']
+keyed_groups:
+- key: tags.ClusterRole
+  separator: ''
+plugin: amazon.aws.aws_ec2
+regions:
+- us-east-1

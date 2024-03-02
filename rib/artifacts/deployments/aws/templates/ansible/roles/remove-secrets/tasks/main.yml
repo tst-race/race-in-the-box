@@ -1,0 +1,12 @@
+---
+
+- name: Assert That Required Variables Are Defined
+  assert:
+    that:
+      - dockerRegistry is defined
+  check_mode: true
+
+- name: Logout of Docker Registry
+  docker_login:
+    state: absent
+    registry: "{{ dockerRegistry }}"

@@ -1,0 +1,219 @@
+{
+  "range": {
+    "RACE_nodes": [
+      {
+        "enclave": "global",
+        "environment": "any",
+        "mgmt_ip": "localhost",
+        "mgmt_name": "localhost",
+        "name": "race-client-00001",
+        "range_ip": "race-client-00001",
+        "reachable": [
+          "race-server-00001",
+          "race-server-00002",
+          "race-server-00003"
+        ],
+        "type": "RACE linux client"
+      },
+      {
+        "enclave": "global",
+        "environment": "any",
+        "mgmt_ip": "localhost",
+        "mgmt_name": "localhost",
+        "name": "race-client-00002",
+        "range_ip": "race-client-00002",
+        "reachable": [
+          "race-server-00001",
+          "race-server-00002",
+          "race-server-00003"
+        ],
+        "type": "RACE linux client"
+      },
+      {
+        "enclave": "global",
+        "environment": "any",
+        "mgmt_ip": "localhost",
+        "mgmt_name": "localhost",
+        "name": "race-client-00003",
+        "range_ip": "race-client-00003",
+        "reachable": [
+          "race-server-00001",
+          "race-server-00002",
+          "race-server-00003"
+        ],
+        "type": "RACE linux client"
+      },
+      {
+        "enclave": "global",
+        "environment": "any",
+        "mgmt_ip": "localhost",
+        "mgmt_name": "localhost",
+        "name": "race-server-00001",
+        "range_ip": "race-server-00001",
+        "reachable": [
+          "race-client-00001",
+          "race-client-00002",
+          "race-server-00002",
+          "race-client-00003",
+          "race-server-00003"
+        ],
+        "type": "RACE linux server"
+      },
+      {
+        "enclave": "global",
+        "environment": "any",
+        "mgmt_ip": "localhost",
+        "mgmt_name": "localhost",
+        "name": "race-server-00002",
+        "range_ip": "race-server-00002",
+        "reachable": [
+          "race-server-00001",
+          "race-client-00001",
+          "race-client-00002",
+          "race-client-00003",
+          "race-server-00003"
+        ],
+        "type": "RACE linux server"
+      },
+      {
+        "enclave": "global",
+        "environment": "any",
+        "mgmt_ip": "localhost",
+        "mgmt_name": "localhost",
+        "name": "race-server-00003",
+        "range_ip": "race-server-00003",
+        "reachable": [
+          "race-server-00001",
+          "race-client-00001",
+          "race-client-00002",
+          "race-server-00002",
+          "race-client-00003"
+        ],
+        "type": "RACE linux server"
+      }
+    ],
+    "bastion": {},
+    "enclaves": [
+      {
+        "name": "global"
+      }
+    ],
+    "name": "Local RiB Deployment: v0.8.0-stubs-3x3",
+    "personas": [
+      {
+        "assoc_enclaves": [
+          "global"
+        ],
+        "identities": [
+          {
+            "email": "race-client-00001@race-client-00001.race-client-00001",
+            "password": "password1234",
+            "service": "imagegram",
+            "username": "race-client-00001"
+          }
+        ],
+        "name": "race-client-00001",
+        "type": "RACE user"
+      },
+      {
+        "assoc_enclaves": [
+          "global"
+        ],
+        "identities": [
+          {
+            "email": "race-client-00002@race-client-00002.race-client-00002",
+            "password": "password1234",
+            "service": "imagegram",
+            "username": "race-client-00002"
+          }
+        ],
+        "name": "race-client-00002",
+        "type": "RACE user"
+      },
+      {
+        "assoc_enclaves": [
+          "global"
+        ],
+        "identities": [
+          {
+            "email": "race-client-00003@race-client-00003.race-client-00003",
+            "password": "password1234",
+            "service": "imagegram",
+            "username": "race-client-00003"
+          }
+        ],
+        "name": "race-client-00003",
+        "type": "RACE user"
+      },
+      {
+        "assoc_enclaves": "global",
+        "identities": [
+          {
+            "email": "race-server-00001@race-server-00001.race-server-00001",
+            "password": "password1234",
+            "service": "imagegram",
+            "username": "race-server-00001"
+          }
+        ],
+        "name": "race-server-00001",
+        "type": "RACE user"
+      },
+      {
+        "assoc_enclaves": "global",
+        "identities": [
+          {
+            "email": "race-server-00002@race-server-00002.race-server-00002",
+            "password": "password1234",
+            "service": "imagegram",
+            "username": "race-server-00002"
+          }
+        ],
+        "name": "race-server-00002",
+        "type": "RACE user"
+      },
+      {
+        "assoc_enclaves": "global",
+        "identities": [
+          {
+            "email": "race-server-00003@race-server-00003.race-server-00003",
+            "password": "password1234",
+            "service": "imagegram",
+            "username": "race-server-00003"
+          }
+        ],
+        "name": "race-server-00003",
+        "type": "RACE user"
+      }
+    ],
+    "services": [
+      {
+        "access": [
+          {
+            "protocol": "https",
+            "url": "race.example2"
+          }
+        ],
+        "auth-req-post": "authenticate",
+        "auth-req-reply": "anonymous",
+        "auth-req-view": "anonymous",
+        "auth-req_delete": "authenticate",
+        "name": "imagegram",
+        "type": "social-pixelfed"
+      },
+      {
+        "access": [
+          {
+            "protocol": "http",
+            "url": "twosix-whiteboard:5000"
+          }
+        ],
+        "auth-req-post": "anonymous",
+        "auth-req-reply": "anonymous",
+        "auth-req-view": "anonymous",
+        "auth-req_delete": "anonymous",
+        "name": "twosix-whiteboard",
+        "type": "twosix-whiteboard"
+      }
+    ]
+  }
+}

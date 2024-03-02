@@ -1,0 +1,145 @@
+AWSTemplateFormatVersion: 2010-09-09
+Description: RACE AWS EC2 Single-Instance CloudFormation Stack
+
+###########
+# Parameters
+###########
+
+Parameters:
+
+  ###########
+  # AWS Env Name
+  ###########
+
+  AwsEnvName:
+    Type: String
+    Description: Name of the AWS Env in RACE, used for all created resources
+
+  ###########
+  # Instance Type
+  ###########
+
+  AmazonInstanceType:
+    Type: String
+    Description: Instance type to use for the EC2 instance in AWS
+
+  ###########
+  # AMIs
+  ###########
+
+  AmazonLinuxAMIID:
+    Type: String
+    Description: AMI to use for the EC2 instance in AWS
+
+  ###########
+  # SSH Key
+  ###########
+
+  SshKeyName:
+    Type: String
+    Description: SSH key pair saved in AWS to use to authenticate in AWS
+
+  ###########
+  # ClusterRole
+  ###########
+
+  ClusterRole:
+    Type: String
+    Description: Role of the instance within the cluster
+
+  ###########
+  # EBS Size
+  ###########
+
+  EbsSize:
+    Type: String
+    Default: 64
+    Description: Size of the EBS for the instance
+
+  ###########
+  # AMI Username
+  ###########
+
+  AmiUsername:
+    Type: String
+    Default: ec2-user
+    Description: Default username based on the AMI
+
+  ###########
+  # Remote Username
+  ###########
+
+  RemoteUsername:
+    Type: String
+    Description: Username for the remote user
+
+###########
+# Resources
+###########
+
+Resources:
+
+  ###########
+  # EC2 Instances
+  ###########
+
+  RaceEc2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      InstanceType: !Ref AmazonInstanceType
+      ImageId: !Ref AmazonLinuxAMIID
+      SubnetId:
+        Fn::ImportValue:
+          !Sub "race-${AwsEnvName}-PublicSubnetId"
+      SecurityGroupIds:
+        - Fn::ImportValue: !Sub "race-${AwsEnvName}-PrivateGlobalAccessSecurityGroupId"
+        - Fn::ImportValue: !Sub "race-${AwsEnvName}-ManagementGlobalAccessSecurityGroupId"
+        - Fn::ImportValue: !Sub "race-${AwsEnvName}-PublicSshAccessSecurityGroupId"
+      KeyName: !Ref SshKeyName
+      BlockDeviceMappings: 
+        - DeviceName: /dev/xvda
+          Ebs: 
+            VolumeSize: !Ref EbsSize
+            VolumeType: "gp2"
+            DeleteOnTermination: "true"
+      Tags:
+        - Key: Name
+          Value: !Sub "race-${AwsEnvName}-${ClusterRole}"
+        - Key: AwsEnvName
+          Value: !Ref AwsEnvName
+        - Key: ClusterRole
+          Value: !Ref ClusterRole
+        - Key: race_cost_service
+          Value: "RiB AWS Env"
+      UserData:
+        Fn::Base64:
+          Fn::Sub: |
+            #!/bin/bash -x
+            exec > >(tee /var/log/user-data.log|logger -t user-data -s 2>/dev/console) 2>&1
+              
+              # Create remote user so all provisioning can continue with that user
+              # rather than the default, AMI-specific user
+              useradd -ms /bin/bash -g root -G wheel -u 2000 ${RemoteUsername}
+
+              # Copy authorized keys from the AMI user to the remote user
+              mkdir -p /home/${RemoteUsername}/.ssh/
+              chmod 700 /home/${RemoteUsername}/.ssh/
+              cp -rf /home/${AmiUsername}/.ssh/authorized_keys /home/${RemoteUsername}/.ssh/authorized_keys
+              chown -R ${RemoteUsername} /home/${RemoteUsername}/.ssh/
+              chmod 600 /home/${RemoteUsername}/.ssh/authorized_keys
+
+              # Enable passwordless sudo for wheel users
+              cp -r /etc/sudoers /etc/sudoers.tmp
+              echo "%wheel  ALL=(ALL)  NOPASSWD: ALL" >> /etc/sudoers.tmp
+              /usr/sbin/visudo -cf /etc/sudoers.tmp && mv /etc/sudoers.tmp /etc/sudoers
+
+              # Updating SSH Configs
+              echo "Port 2222" >> /etc/ssh/sshd_config
+              systemctl restart sshd.service
+
+###########
+# Outputs
+###########
+
+# N/A
+

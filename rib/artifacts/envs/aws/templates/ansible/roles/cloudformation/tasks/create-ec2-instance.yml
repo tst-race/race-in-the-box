@@ -1,0 +1,23 @@
+---
+
+- name: "Create {{ clusterRole }} EC2 Instance CloudFormation Stack"
+  cloudformation:
+    stack_name: "race-{{ awsEnvName }}-{{ clusterRole }}"
+    state: "present"
+    region: "{{ awsRegion }}"
+    on_create_failure: "DELETE"
+    template: "roles/cloudformation/files/ec2-instance.yml"
+    template_parameters:
+      AmazonInstanceType: "{{ amazonInstanceType }}"
+      AmazonLinuxAMIID: "{{ amazonLinuxAMIID }}"
+      AwsEnvName: "{{ awsEnvName }}"
+      ClusterRole: "{{ clusterRole }}"
+      EbsSize: "{{ ebsSize }}"
+      SshKeyName: "{{ sshKeyName }}"
+      RemoteUsername: "{{ remoteUsername }}"
+    tags:
+      AwsEnvName: "{{ awsEnvName }}"
+      AwsEnvOwner: "{{ awsEnvOwner }}"
+      Stack: "race-{{ awsEnvName }}-{{ clusterRole }}"
+      Creator: "rib"
+      race_cost_service: "RiB AWS Env"

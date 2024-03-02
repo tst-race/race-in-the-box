@@ -1,0 +1,28 @@
+###
+# Playbook to provision a RACE AWS environment
+###
+
+---
+
+- name: Create CloudFormation Stacks
+  hosts: localhost
+  gather_facts: no
+  roles:
+    - cloudformation
+
+- name: Wait For EC2 Instances To Be Reachable
+  hosts: all
+  gather_facts: no
+  tasks:
+    - wait_for_connection:
+
+- name: Configure EC2 Instances
+  hosts: all
+  roles:
+    - efs
+    - docker
+
+- name: Configure ARM Android Support
+  hosts: android_arm64_node_host
+  roles:
+    - arm

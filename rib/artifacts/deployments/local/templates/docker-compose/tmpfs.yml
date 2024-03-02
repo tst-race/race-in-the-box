@@ -1,0 +1,4 @@
+- type: tmpfs
+      target: /tmpfs # TODO, this HAS to be 6 spaces, its brittle
+      tmpfs:
+        size: {tmpfs_size_bytes}

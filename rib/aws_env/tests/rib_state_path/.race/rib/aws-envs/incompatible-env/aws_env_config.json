@@ -1,0 +1,102 @@
+{
+  "android_clients": {
+    "arch": "x86",
+    "image": null
+  },
+  "artifact_manager_plugins": [
+    {
+      "dev_or_prod": "dev",
+      "has_external_services": false,
+      "local_plugin_path": null,
+      "plugin_name": "PluginArtifactManagerTwoSixCpp",
+      "plugin_revision": "develop",
+      "race_version": "2.0.0",
+      "ta": "artifact-manager"
+    }
+  ],
+  "bastion": {
+    "image": "ghcr.io/tst-race/race-images/race-bastion:main"
+  },
+  "docker_registry_url": "ghcr.io",
+  "ec2_instance_details": {
+    "android": {
+      "ami": "ami-0dc2d3e4c0f9ebd18",
+      "instance_type": "c5.metal",
+      "ssh_port": 2222
+    },
+    "linux": {
+      "ami": "ami-0dc2d3e4c0f9ebd18",
+      "instance_type": "t3a.2xlarge",
+      "ssh_port": 2222
+    },
+    "linux_gpu": {
+      "ami": "ami-098a4f4ff4f5f6220",
+      "instance_type": "p3.2xlarge",
+      "ssh_port": 2222
+    },
+    "service": {
+      "ami": "ami-0dc2d3e4c0f9ebd18",
+      "instance_type": "t3a.2xlarge",
+      "ssh_port": 2222
+    }
+  },
+  "linux_clients": {
+    "image": "ghcr.io/tst-race/race-images/race-runtime-linux:main"
+  },
+  "linux_servers": {
+    "image": "ghcr.io/tst-race/race-images/race-runtime-linux:main"
+  },
+  "node_topology": {
+    "android_node_instances": [],
+    "gpu_node_instances": [],
+    "linux_node_instances": [
+      {
+        "android_client_personas": [],
+        "linux_client_personas": [
+          "race-client-00001",
+          "race-client-00002"
+        ],
+        "linux_gpu_client_personas": [],
+        "linux_gpu_server_personas": [],
+        "linux_server_personas": [
+          "race-server-00001",
+          "race-server-00002"
+        ]
+      }
+    ]
+  },
+  "remote_username": "twosix",
+  "ssh_key_name": "race-kyle_treubig",
+  "network_manager_plugins": [
+    {
+      "dev_or_prod": "dev",
+      "local_plugin_path": null,
+      "plugin_name": "PluginNMTwoSixStub",
+      "plugin_revision": "develop",
+      "race_version": "2.0.0",
+      "ta": "network-manager"
+    }
+  ],
+  "comms_channels": [
+    {
+      "channel_name": "twoSixDirectCpp",
+      "dev_or_prod": "dev",
+      "has_external_services": false,
+      "local_plugin_path": null,
+      "plugin_name": "PluginCommsTwoSixStub",
+      "plugin_revision": "develop",
+      "race_version": "2.0.0",
+      "ta": "comms"
+    },
+    {
+      "channel_name": "twoSixIndirectCpp",
+      "dev_or_prod": "dev",
+      "has_external_services": false,
+      "local_plugin_path": null,
+      "plugin_name": "PluginCommsTwoSixStub",
+      "plugin_revision": "develop",
+      "race_version": "2.0.0",
+      "ta": "comms"
+    }
+  ]
+}

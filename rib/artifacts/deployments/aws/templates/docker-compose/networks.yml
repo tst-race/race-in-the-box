@@ -1,0 +1,3 @@
+networks:
+  rib-overlay-network:
+    external: true

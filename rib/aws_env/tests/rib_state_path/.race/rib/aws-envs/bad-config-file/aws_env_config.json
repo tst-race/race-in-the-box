@@ -1,0 +1,36 @@
+{
+    "name": "bad-config-file",
+    "rib_version": "test-rib-version",
+    "ssh_key_name": "test-ssh-key-pair",
+    "remote_username": "test-user",
+    "region": "test-region",
+    "cluster_manager": {
+        "instance_type": "test-instance-type",
+        "instance_arch": "x86",
+        "ebs_size": 64
+    },
+    "service_host": {
+        "instance_type": "test-instance-type",
+        "instance_arch": "x86",
+        "ebs_size": 64
+    },
+    "linux_hosts": {
+        "instance_type": "test-instance-type",
+        "instance_arch": "x86",
+        "instance_count": 1,
+        "ebs_size": 64
+    },
+    "gpu_hosts": {
+        "instance_type": "test-gpu-instance-type",
+        "instance_arch": "x86",
+        "instance_count": 0,
+        "ebs_size": 128
+    },
+    "android_hosts": {
+        "instance_type": "test-android-instance-type",
+        "instance_arch": "x86",
+        "instance_count": 0,
+        "ebs_size": 128
+    },
+    // This isn't valid JSON
+}

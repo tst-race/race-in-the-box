@@ -1,0 +1,17 @@
+---
+
+- name: Install EFS Utils
+  yum:
+    name: "{{ packages }}"
+    state: present
+    update_cache: true
+  vars:
+    packages:
+      - amazon-efs-utils
+  become: yes
+
+- name: Mount Data EFS Volume
+  import_tasks: mount-efs-volume.yml
+  vars:
+    volumeName: DataFileSystem
+    mountPath: /data
