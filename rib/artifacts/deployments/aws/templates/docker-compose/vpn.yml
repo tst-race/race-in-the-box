@@ -1,5 +1,5 @@
 dnsproxy:
-  image: defreitas/dns-proxy-server:latest
+  image: defreitas/dns-proxy-server:3.10.4-snapshot
   hostname: dnsproxy
   labels:
     race.rib.deployment-name: ${{DEPLOYMENT_NAME}}
