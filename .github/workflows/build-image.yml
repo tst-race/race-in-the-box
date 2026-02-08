@@ -26,7 +26,7 @@ on:
 
 jobs:
   build-image:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     outputs:
         image-name: ${{ steps.image-name.outputs.image-name }}
         metadata: ${{ steps.build.outputs.metadata }}

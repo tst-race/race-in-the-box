@@ -39,7 +39,7 @@ jobs:
       platforms: linux/amd64,linux/arm64 
   
   create-openapi-spec:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container: ${{ needs.build-rib-image.outputs.image-name }}
     needs: build-rib-image
     steps:
@@ -56,7 +56,7 @@ jobs:
           path: openapi.json
 
   check-style-rib:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container: ${{ needs.build-rib-image.outputs.image-name }}
     needs: build-rib-image
     steps:
@@ -74,7 +74,7 @@ jobs:
         if: success() || failure()
 
   check-style-webapp:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -86,7 +86,7 @@ jobs:
         working-directory: webapp
 
   test-rib:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     container: ${{ needs.build-rib-image.outputs.image-name }}
     needs: build-rib-image
     steps:
@@ -110,7 +110,7 @@ jobs:
           files: junit-coverage.xml
 
   test-shellcheck:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout
         uses: actions/checkout@v3
@@ -130,7 +130,7 @@ jobs:
           shellcheck entrypoints/rib_${CURRENT_RIB_VERSION}.sh
 
   test-webapp:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     needs: create-openapi-spec
     steps:
       - name: Checkout
