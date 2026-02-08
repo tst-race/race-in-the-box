@@ -1,4 +1,3 @@
-
 # Copyright 2023 Two Six Technologies
 # 
 # Licensed under the Apache License, Version 2.0 (the "License");
@@ -117,9 +116,9 @@ RUN curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /
 RUN echo "deb [arch=$TARGETARCH signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
 $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null
 RUN apt-get update && apt-get install -y \
-        containerd.io=1.4.12-1 \
-        docker-ce=5:20.10.12~3-0~ubuntu-bionic \
-        docker-ce-cli=5:20.10.12~3-0~ubuntu-bionic
+        containerd.io=1.6.21-1 \
+        docker-ce=5:20.10.24~3-0~ubuntu-bionic \
+        docker-ce-cli=5:20.10.24~3-0~ubuntu-bionic
 
 # Setup Bash Environment
 WORKDIR ${RACE_ROOT}
